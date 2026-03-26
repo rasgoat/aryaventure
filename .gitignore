@@ -19,3 +19,6 @@ package-lock.json
 inital:sub-HTML/
 arya-core/
 .claude/
+*.command
+og-image.html
+generate-og.js
