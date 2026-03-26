@@ -58,7 +58,7 @@
   --px: clamp(24px,4vw,80px);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
-html{background:var(--black);color:var(--off-white);overflow-x:hidden;scroll-behavior:smooth}
+html{background:var(--black);color:var(--off-white);overflow-x:hidden}
 a,button{transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
@@ -398,7 +398,7 @@ section{padding:60px 20px}
   }
   .case-study video {
     pointer-events: none !important;
-    touch-action: none !important;
+    touch-action: pan-y !important;
   }
 }
 
@@ -416,13 +416,16 @@ section{padding:60px 20px}
   }
   section,
   .shapes-grid-section,
-  .av-video-section {
-    overflow: visible;
-    touch-action: pan-y;
+  .av-video-section,
+  #presence,
+  .presence-bg,
+  .cta-section {
+    overflow: visible !important;
+    touch-action: pan-y !important;
   }
   video, canvas, #logo-3d {
-    touch-action: none;
-    pointer-events: none;
+    touch-action: pan-y !important;
+    pointer-events: none !important;
   }
   * {
     -webkit-tap-highlight-color: transparent;
@@ -761,7 +764,7 @@ section{padding:60px 20px}
         <li><span class="check">✓</span> 3 months free maintenance</li>
         <li><span class="check">✓</span> Full offerings of Tier 2</li>
       </ul>
-      <div class="pricing-proof">Full delivery in 21 to 30 days. Premium website, catalogue shoot and video creation.</div>
+      <div class="pricing-proof">Full delivery in 21 to 30 days. Built to dominate from day one.</div>
       <a href="#contact" class="pricing-cta">Plan Full Build</a>
     </div>
     <div class="pricing-card">
@@ -1306,6 +1309,14 @@ if (window.innerWidth > 768) {
   });
 
   function init(){
+
+    // Ensure mobile scroll is never blocked by ScrollTrigger
+    if(isMob){
+      ScrollTrigger.normalizeScroll(false);
+      ScrollTrigger.config({ignoreMobileResize:true});
+      document.body.style.overflowY='auto';
+      document.documentElement.style.overflowY='auto';
+    }
 
     // NAVBAR
     gsap.to('.navbar',{y:0,duration:1,ease:'power4.out',delay:0.4});
