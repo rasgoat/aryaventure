@@ -89,17 +89,18 @@ button{font:inherit;border:none;background:none;cursor:pointer;color:inherit}
 
 /* HERO */
 .hero{position:relative;width:100%;height:100vh;height:100dvh;overflow:hidden;background:var(--black);padding:0}
-.hero-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;opacity:0.55;will-change:opacity;-webkit-transform:translateZ(0);transform:translateZ(0)}
+.hero-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;will-change:opacity;-webkit-transform:translateZ(0);transform:translateZ(0)}
 #logo-3d{position:absolute;inset:0;z-index:1}
 #logo-3d canvas{display:block;width:100%!important;height:100%!important}
-.hero-content{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:0 var(--px) 14vh;pointer-events:none}
+.hero-content{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:0 var(--px) 10vh;pointer-events:none}
 h1.hero-tag,.hero-tag{font-family:var(--font-title);font-weight:700;font-size:clamp(19px,2.4vw,28px);letter-spacing:0.08em;text-transform:uppercase;color:#ffffff;margin-bottom:14px;margin-top:0}
-.hero-sub{font-family:var(--font-title);font-weight:500;font-size:clamp(15px,1.6vw,19px);color:rgba(255,255,255,0.5);margin-bottom:40px;max-width:520px}
-.hero-cta{pointer-events:auto;display:inline-flex;align-items:center;gap:10px;font-family:var(--font-title);font-weight:600;font-size:16px;letter-spacing:0.02em;color:var(--accent);transition:gap 0.4s var(--ease-out)}
-.hero-cta:hover{gap:16px}
-.hero-cta .arrow{display:inline-block;font-size:18px;transition:transform 0.4s var(--ease-out)}
+.hero-sub{font-family:var(--font-title);font-weight:500;font-size:clamp(15px,1.6vw,19px);color:rgba(255,255,255,0.5);margin-bottom:32px;max-width:520px}
+.hero-buttons{display:flex;align-items:center;gap:20px;flex-wrap:wrap;pointer-events:auto}
+.hero-cta{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-title);font-weight:600;font-size:15px;letter-spacing:0.02em;color:var(--accent);transition:gap 0.4s var(--ease-out);padding:12px 0;white-space:nowrap}
+.hero-cta:hover{gap:14px}
+.hero-cta .arrow{display:inline-block;font-size:16px;transition:transform 0.4s var(--ease-out)}
 .hero-cta:hover .arrow{transform:translateY(4px)}
-.hero-demo-btn{pointer-events:auto;display:inline-flex;align-items:center;padding:14px 32px;background:var(--accent);color:var(--black);border-radius:4px;font-family:var(--font-title);font-weight:600;font-size:14px;letter-spacing:0.04em;text-transform:uppercase;transition:transform 0.4s var(--ease-out),box-shadow 0.4s ease}
+.hero-demo-btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 28px;background:var(--accent);color:var(--black);border-radius:4px;font-family:var(--font-title);font-weight:600;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;transition:transform 0.4s var(--ease-out),box-shadow 0.4s ease;white-space:nowrap}
 .hero-demo-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(200,255,0,0.2)}
 .hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:12px}
 .hero-scroll span{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.5)}
@@ -277,10 +278,14 @@ img.logo:hover{opacity:0.7}
 .footer-grid{grid-template-columns:1fr 1fr;gap:40px}
 .case-study-meta{grid-template-columns:1fr;gap:32px}
 }
+@media(min-width:769px){
+#hero-video-desktop{opacity:0.35}
+}
 @media(max-width:768px){
 #logo-3d{display:none!important}
+#hero-video-mobile{opacity:0.65}
 .hero{height:100dvh}
-.hero-video{opacity:0.65!important;object-fit:cover;object-position:center center}
+.hero-video{object-fit:cover;object-position:center center}
 .hero-tag{font-size:15px;letter-spacing:0.06em}
 .hero-sub{font-size:14px;margin-bottom:28px}
 .hero-content{padding:0 20px 8vh}
@@ -360,10 +365,11 @@ section{padding:60px 20px}
   .nav-links a,.nav-cta-btn,.footer-col a,.pricing-cta,.hero-cta,.hero-demo-btn,.magnetic-btn,.cta-email,.ig-link,.option-pill,.modal-submit,.modal-close,.confirm-cta,#cookie-accept,#cookie-decline{min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center}
   .footer-col a{min-height:44px;display:flex;align-items:center}
   .about-video-wrap{min-height:300px}
-  .hero-content{display:flex;flex-direction:column;justify-content:flex-end}
+  .hero-content{padding:0 20px 6vh}
   .hero-scroll{display:none}
-  .hero-demo-btn{padding:16px 28px;font-size:14px;text-align:center;width:auto;justify-content:center;border-radius:6px}
-  .hero-cta{font-size:15px;padding:12px 0}
+  .hero-buttons{flex-direction:row;gap:16px}
+  .hero-demo-btn{padding:13px 24px;font-size:12px;border-radius:4px}
+  .hero-cta{font-size:14px;padding:10px 0}
   .cta-section{min-height:80vh;padding:60px 20px}
   .cta-title{margin-bottom:16px}
   .cta-sub{font-size:15px;margin-bottom:32px}
@@ -487,12 +493,13 @@ section{padding:60px 20px}
 
 <!-- HERO -->
 <section class="hero" id="hero" aria-label="Hero">
-  <video class="hero-video" src="hero-video/No-logo-hero.mp4" autoplay muted loop playsinline preload="auto"></video>
+  <video id="hero-video-desktop" class="hero-video" autoplay muted loop playsinline preload="auto" style="display:none"><source src="hero-video/No-logo-hero.mp4" type="video/mp4"></video>
+  <video id="hero-video-mobile" class="hero-video" autoplay muted loop playsinline preload="auto" style="display:none"><source src="hero-video/AV-video.mp4" type="video/mp4"></video>
   <div id="logo-3d"></div>
   <div class="hero-content">
     <h1 class="hero-tag">Digital Web Agency</h1>
     <p class="hero-sub">Premium websites built for ambitious brands</p>
-    <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+    <div class="hero-buttons">
       <a href="#work" class="hero-cta" onclick="if(window.gtag)gtag('event','click',{event_category:'cta',event_label:'see_our_work'})">See Our Work <span class="arrow">↓</span></a>
       <a href="#contact" class="hero-demo-btn" onclick="if(window.gtag)gtag('event','click',{event_category:'cta',event_label:'get_a_free_demo'})">Get a Free Demo</a>
     </div>
@@ -888,17 +895,33 @@ section{padding:60px 20px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Observer.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
-<!-- PRELOADER: fire immediately (no GLB) -->
+<!-- HERO VIDEO SWITCH: show correct video for device -->
+<script>
+(function(){
+  var isMobile = window.innerWidth <= 768;
+  if(isMobile) {
+    document.getElementById('hero-video-mobile').style.display = 'block';
+    document.getElementById('logo-3d').style.display = 'none';
+  } else {
+    document.getElementById('hero-video-desktop').style.display = 'block';
+  }
+})();
+</script>
+
+<!-- PRELOADER -->
 <script>
 (function(){
   var bar = document.getElementById('preloader-bar');
   var preloader = document.getElementById('preloader');
   if(bar) bar.style.width='100%';
-  setTimeout(function(){
-    if(preloader) preloader.classList.add('done');
-    setTimeout(function(){if(preloader)preloader.style.display='none'},500);
-    window.dispatchEvent(new Event('arya-ready'));
-  },400);
+  // On mobile, fire immediately. On desktop, wait for GLB or timeout.
+  if(window.innerWidth <= 768){
+    setTimeout(function(){
+      if(preloader) preloader.classList.add('done');
+      setTimeout(function(){if(preloader)preloader.style.display='none'},500);
+      window.dispatchEvent(new Event('arya-ready'));
+    },300);
+  }
 })();
 </script>
 
@@ -963,6 +986,16 @@ if (window.innerWidth > 768) {
       masterGroup.add(model);
       camera.position.z = 80*2.8;
 
+      // Dismiss preloader + fire ready
+      var bar=document.getElementById('preloader-bar');
+      var preloader=document.getElementById('preloader');
+      if(bar)bar.style.width='100%';
+      setTimeout(function(){
+        if(preloader)preloader.classList.add('done');
+        setTimeout(function(){if(preloader)preloader.style.display='none'},500);
+        window.dispatchEvent(new Event('arya-ready'));
+      },200);
+
       masterGroup.rotation.y = -Math.PI*0.4;
       masterGroup.scale.set(0.001,0.001,0.001);
       const tl = gsap.timeline({delay:0.5,defaults:{ease:'power4.out'}});
@@ -971,7 +1004,14 @@ if (window.innerWidth > 768) {
       tl.call(()=>{gsap.to(masterGroup.position,{y:2,duration:3.5,repeat:-1,yoyo:true,ease:'sine.inOut'})});
     },
     undefined,
-    function(){}
+    function(){
+      // GLB failed — dismiss preloader anyway
+      var bar=document.getElementById('preloader-bar');
+      var preloader=document.getElementById('preloader');
+      if(bar)bar.style.width='100%';
+      if(preloader){preloader.classList.add('done');setTimeout(function(){preloader.style.display='none'},800)}
+      window.dispatchEvent(new Event('arya-ready'));
+    }
   );
 
   const mouse = {x:0, y:0};
@@ -1141,15 +1181,16 @@ if (window.innerWidth > 768) {
       el.innerHTML=result;
     });
 
-    // Hero video — ensure loop + smooth fade-in
-    const heroVid = document.querySelector('.hero-video');
+    // Hero video — find the VISIBLE one (desktop or mobile) and fade it in
+    var heroVid = document.getElementById(isMob ? 'hero-video-mobile' : 'hero-video-desktop');
     if (heroVid) {
       heroVid.loop = true;
       heroVid.muted = true;
       heroVid.playsInline = true;
       var hp = heroVid.play();
       if (hp && hp.catch) hp.catch(function(){});
-      gsap.fromTo(heroVid, {opacity:0}, {opacity:isMob?0.65:0.55, duration:isMob?1.2:2.5, ease:'power2.inOut', delay:0.1});
+      var targetOpacity = isMob ? 0.65 : 0.35;
+      gsap.fromTo(heroVid, {opacity:0}, {opacity:targetOpacity, duration:isMob?1.2:2.5, ease:'power2.inOut', delay:0.1});
     }
     // Scroll indicator fades in after delay
     gsap.fromTo('.hero-scroll', {opacity:0, y:10}, {opacity:1, y:0, duration:1.2, ease:'power3.out', delay:2.2});
