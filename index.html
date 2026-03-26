@@ -363,9 +363,7 @@ section{padding:60px 20px}
   .nav-hamburger.active span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
   .nav-hamburger.active span:nth-child(2){opacity:0}
   .nav-hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
-  .nav-links.mobile-open{display:flex!important;position:fixed;inset:0;top:60px;background:rgba(0,0,0,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);flex-direction:column;align-items:center;justify-content:center;gap:32px;z-index:999;animation:fadeIn 0.3s ease}
-  .nav-links.mobile-open a{font-size:18px;color:var(--off-white)}
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  /* nav-links mobile-open now handled by FIX 5 transition CSS above */
 }
 /* MOBILE TOUCH TARGETS + LAYOUT */
 @media(max-width:768px){
@@ -385,6 +383,83 @@ section{padding:60px 20px}
   .cta-locations{margin-top:48px;font-size:12px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}.marquee-track{animation:none}}
+
+/* FIX 1 — Make Me Joi + case study mobile scroll */
+@media (max-width: 768px) {
+  .case-study,
+  .case-study-video,
+  .work,
+  #work,
+  .case-study-features,
+  .case-study-meta {
+    overflow: visible !important;
+    touch-action: pan-y !important;
+  }
+  .case-study video {
+    pointer-events: none !important;
+    touch-action: none !important;
+  }
+}
+
+/* FIX 2 — Global mobile scroll */
+@media (max-width: 768px) {
+  html {
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    touch-action: pan-y;
+  }
+  section,
+  .shapes-grid-section,
+  .av-video-section {
+    overflow: visible;
+    touch-action: pan-y;
+  }
+  video, canvas, #logo-3d {
+    touch-action: none;
+    pointer-events: none;
+  }
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* FIX 5 — Mobile nav transitions */
+@media (max-width: 768px) {
+  .nav-links {
+    display: flex !important;
+    position: fixed;
+    inset: 0;
+    top: 60px;
+    background: rgba(0,0,0,0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-20px);
+    visibility: hidden;
+    transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s ease;
+  }
+  .nav-links.mobile-open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    visibility: visible;
+  }
+  .nav-links.mobile-open a {
+    font-size: 18px;
+    color: var(--off-white);
+  }
+}
 
 /* CONTACT MODAL */
 .modal-overlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:flex-start;justify-content:center;background:rgba(0,0,0,0.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.3s ease,visibility 0.3s ease;padding:40px 20px;overflow-y:auto}
@@ -475,37 +550,7 @@ section{padding:60px 20px}
 </head>
 <body>
 
-<!-- GLOBAL VIDEO AUTOPLAY — force all videos to play on load + one-tap unlock for iOS -->
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  var allV = document.querySelectorAll('video');
-  allV.forEach(function(v){
-    v.muted = true;
-    v.loop = true;
-    v.playsInline = true;
-    v.setAttribute('playsinline','');
-    v.setAttribute('muted','');
-    var p = v.play();
-    if(p !== undefined){
-      p.catch(function(){});
-    }
-  });
-  // One-tap unlock for ALL videos (iOS/Safari)
-  var unlocked = false;
-  function unlockAll(){
-    if(unlocked) return;
-    unlocked = true;
-    allV.forEach(function(v){
-      v.muted = true;
-      v.play().catch(function(){});
-    });
-    document.removeEventListener('touchstart', unlockAll);
-    document.removeEventListener('click', unlockAll);
-  }
-  document.addEventListener('touchstart', unlockAll, {passive:true, once:true});
-  document.addEventListener('click', unlockAll, {once:true});
-});
-</script>
+<!-- Video system handled by unified script before </body> -->
 
 <!-- PRELOADER -->
 <div id="preloader">
@@ -1319,126 +1364,7 @@ if (window.innerWidth > 768) {
       });
     });
 
-    // ROBUST VIDEO MANAGEMENT — force autoplay, loop, and recovery
-    (function(){
-      var allVideos = document.querySelectorAll('video');
-
-      // Force-play a single video element (with retry)
-      function forcePlay(v) {
-        if (!v || v.paused === false) return;
-        v.muted = true;
-        v.setAttribute('muted','');
-        v.setAttribute('playsinline','');
-        var p = v.play();
-        if (p && p.catch) p.catch(function(){
-          // iOS may need user gesture — try again after short delay
-          setTimeout(function(){ v.muted=true; v.play(); }, 300);
-        });
-      }
-
-      // Set up each video
-      allVideos.forEach(function(v) {
-        // Ensure critical attributes are always set
-        v.setAttribute('playsinline','');
-        v.setAttribute('muted','');
-        v.muted = true;
-        v.loop = true;
-        v.playsInline = true;
-
-        // Client display videos at 1.5x
-        if (v.classList.contains('client-video')) {
-          v.addEventListener('loadedmetadata', function(){ v.playbackRate = 1.5; });
-          v.addEventListener('play', function(){ v.playbackRate = 1.5; });
-        }
-
-        // Recovery: if video stalls or ends unexpectedly, restart
-        v.addEventListener('ended', function(){ v.currentTime = 0; forcePlay(v); });
-        v.addEventListener('stalled', function(){ setTimeout(function(){ forcePlay(v); }, 500); });
-        v.addEventListener('error', function(){ setTimeout(function(){ v.load(); forcePlay(v); }, 1000); });
-
-        // Initial play: force-play ALL videos immediately
-        forcePlay(v);
-      });
-
-      // IntersectionObserver — preload videos early (rootMargin 400px) and play when partially visible
-      if ('IntersectionObserver' in window) {
-        // Preload observer — start loading video data well before it's visible
-        var preloadObserver = new IntersectionObserver(function(entries) {
-          entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-              var v = entry.target;
-              if (v.preload !== 'auto') v.preload = 'auto';
-              preloadObserver.unobserve(v);
-            }
-          });
-        }, { rootMargin: '600px 0px' });
-
-        // Play/pause observer — play as soon as even slightly visible
-        var vidObserver = new IntersectionObserver(function(entries) {
-          entries.forEach(function(entry) {
-            var v = entry.target;
-            if (entry.isIntersecting) {
-              forcePlay(v);
-            } else {
-              v.pause();
-            }
-          });
-        }, { threshold: 0.05, rootMargin: '100px 0px' });
-
-        allVideos.forEach(function(v){
-          preloadObserver.observe(v);
-          vidObserver.observe(v);
-        });
-      }
-
-      // Page Visibility API — resume all visible videos when tab/page regains focus
-      document.addEventListener('visibilitychange', function() {
-        if (document.visibilityState === 'visible') {
-          allVideos.forEach(function(v) {
-            // Only play if the video element is in the viewport
-            var rect = v.getBoundingClientRect();
-            var inView = rect.top < window.innerHeight && rect.bottom > 0;
-            if (inView) forcePlay(v);
-          });
-        }
-      });
-
-      // Also handle pageshow (bfcache restoration on Safari/mobile)
-      window.addEventListener('pageshow', function(e) {
-        if (e.persisted) {
-          allVideos.forEach(function(v) {
-            v.load();
-            var rect = v.getBoundingClientRect();
-            var inView = rect.top < window.innerHeight && rect.bottom > 0;
-            if (inView) setTimeout(function(){ forcePlay(v); }, 100);
-          });
-        }
-      });
-
-      // Focus event — covers returning to browser window
-      window.addEventListener('focus', function() {
-        allVideos.forEach(function(v) {
-          var rect = v.getBoundingClientRect();
-          var inView = rect.top < window.innerHeight && rect.bottom > 0;
-          if (inView) forcePlay(v);
-        });
-      });
-
-      // iOS first-touch unlock — play ALL videos on first user interaction
-      var unlocked = false;
-      function unlockVideos(){
-        if(unlocked) return;
-        unlocked = true;
-        allVideos.forEach(function(v){
-          v.muted = true;
-          forcePlay(v);
-        });
-        document.removeEventListener('touchstart', unlockVideos);
-        document.removeEventListener('click', unlockVideos);
-      }
-      document.addEventListener('touchstart', unlockVideos, {passive:true,once:true});
-      document.addEventListener('click', unlockVideos, {once:true});
-    })();
+    // Video management moved to unified script before </body>
 
     // ABOUT PARALLAX
     // About video reveal
@@ -1554,18 +1480,33 @@ if (window.innerWidth > 768) {
   }
   lerpBg();
 
-  // GSAP scroll-driven parallax on the SVG background
+  // GSAP scroll-driven parallax on the SVG background (desktop only — scrub)
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-    gsap.to('.presence-bg', {
-      y: -80,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#presence',
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: true,
-      }
-    });
+    if (window.innerWidth > 768) {
+      gsap.to('.presence-bg', {
+        y: -80,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#presence',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true,
+        }
+      });
+    } else {
+      // Mobile fallback — simple fade-in via IntersectionObserver
+      const els = document.querySelectorAll('.presence-bg');
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.style.transition = 'transform 1s ease-out';
+            e.target.style.transform = 'translateY(-40px)';
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      els.forEach(el => obs.observe(el));
+    }
   }
 })();
 </script>
@@ -1888,7 +1829,7 @@ if(window.innerWidth>768){
   }
 })();
 </script>
-<!-- MOBILE HAMBURGER MENU -->
+<!-- MOBILE HAMBURGER MENU (FIX 5) -->
 <script>
 (function(){
   var ham = document.getElementById('nav-hamburger');
@@ -1911,17 +1852,17 @@ if(window.innerWidth>768){
     }
   });
 
-  navLinks.querySelectorAll('a').forEach(function(a) {
-    a.addEventListener('click', function() {
+  // Nav link smooth scroll on mobile
+  navLinks.querySelectorAll('a[href^="#"]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var href = link.getAttribute('href');
+      var target = document.querySelector(href);
       closeMenu();
-      var href = a.getAttribute('href');
-      if(href && href.startsWith('#') && href !== '#'){
-        var target = document.querySelector(href);
-        if(target){
-          setTimeout(function(){
-            target.scrollIntoView({behavior:'smooth',block:'start'});
-          }, 100);
-        }
+      if(target){
+        setTimeout(function(){
+          target.scrollIntoView({behavior:'smooth',block:'start'});
+        }, 350);
       }
     });
   });
@@ -1961,13 +1902,7 @@ if(window.innerWidth>768){
   }
 })();
 </script>
-<!-- ALL VIDEOS PRELOAD AUTO -->
-<script>
-document.querySelectorAll('video').forEach(function(v){
-  v.preload = 'auto';
-  v.setAttribute('preload','auto');
-});
-</script>
+<!-- Video preload handled by unified video system -->
 <!-- GSAP SCROLLTRIGGER REFRESH ON LOAD -->
 <script>
 window.addEventListener('load', function(){
@@ -1979,6 +1914,116 @@ window.addEventListener('load', function(){
   document.body.style.overflowY = 'auto';
   document.documentElement.style.overflowY = 'auto';
 });
+</script>
+
+<!-- FIX 4 — UNIFIED VIDEO SYSTEM -->
+<script>
+(function() {
+
+  // Hide all native video controls always
+  var styleEl = document.createElement('style');
+  styleEl.textContent = '\
+    video::-webkit-media-controls,\
+    video::-webkit-media-controls-enclosure,\
+    video::-webkit-media-controls-panel,\
+    video::-webkit-media-controls-play-button {\
+      display: none !important;\
+      -webkit-appearance: none;\
+    }\
+    video {\
+      -webkit-appearance: none;\
+    }\
+  ';
+  document.head.appendChild(styleEl);
+
+  var isMobile = window.innerWidth <= 768;
+
+  // Get hero videos
+  var heroDesktop = document.getElementById('hero-video-desktop');
+  var heroMobile = document.getElementById('hero-video-mobile');
+  var activeHero = isMobile ? heroMobile : heroDesktop;
+
+  // All non-hero videos
+  var sectionVideos = Array.from(
+    document.querySelectorAll('video')
+  ).filter(function(v) {
+    return v.id !== 'hero-video-desktop' && v.id !== 'hero-video-mobile';
+  });
+
+  // Set all section videos to not preload
+  sectionVideos.forEach(function(v) {
+    v.preload = 'none';
+    v.removeAttribute('autoplay');
+    v.muted = true;
+    v.loop = true;
+    v.setAttribute('playsinline', '');
+    v.setAttribute('muted', '');
+    // Preserve client-video playback rate
+    if (v.classList.contains('client-video')) {
+      v.addEventListener('loadedmetadata', function(){ v.playbackRate = 1.5; });
+      v.addEventListener('play', function(){ v.playbackRate = 1.5; });
+    }
+  });
+
+  // Hero video setup
+  if(activeHero) {
+    activeHero.muted = true;
+    activeHero.loop = true;
+    activeHero.preload = 'auto';
+    activeHero.setAttribute('playsinline', '');
+    activeHero.play().catch(function(){});
+  }
+
+  // iOS Safari unlock — first touch plays hero
+  var unlocked = false;
+  var unlock = function() {
+    if(unlocked) return;
+    unlocked = true;
+    if(activeHero) {
+      activeHero.play().catch(function(){});
+    }
+  };
+  document.addEventListener('touchstart', unlock, {once: true, passive: true});
+  document.addEventListener('click', unlock, {once: true});
+
+  // Section videos — play on scroll into view, preload 200px before
+  var videoObserver = new IntersectionObserver(
+    function(entries) {
+      entries.forEach(function(entry) {
+        var v = entry.target;
+        if(entry.isIntersecting) {
+          if(v.preload === 'none') {
+            v.preload = 'auto';
+            v.load();
+          }
+          v.play().catch(function(){});
+        } else {
+          v.pause();
+        }
+      });
+    },
+    {
+      threshold: 0.1,
+      rootMargin: '200px 0px 0px 0px'
+    }
+  );
+
+  sectionVideos.forEach(function(v) {
+    videoObserver.observe(v);
+  });
+
+  // After first scroll interaction on mobile, pre-unlock all section videos
+  if(isMobile) {
+    var preUnlock = function() {
+      sectionVideos.forEach(function(v) {
+        v.play().then(function(){ v.pause(); }).catch(function(){});
+      });
+      window.removeEventListener('touchstart', preUnlock);
+    };
+    window.addEventListener('touchstart', preUnlock, {once: true, passive: true});
+  }
+
+})();
 </script>
 </body>
 </html>

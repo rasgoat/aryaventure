@@ -70,6 +70,66 @@ img.logo:hover{opacity:0.7}
 .policy-title{font-family:var(--font-title);font-weight:700;font-size:clamp(36px,5vw,64px);color:var(--off-white);margin-bottom:48px;line-height:1.05}
 .policy-body p{font-family:var(--font-body);color:var(--gray-400);font-size:16px;line-height:1.75;margin-bottom:16px}
 .policy-body h2{font-family:var(--font-body);color:var(--off-white);font-size:20px;font-weight:600;margin-top:48px;margin-bottom:16px}
+
+/* Mobile hamburger menu */
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;z-index:1001}
+.nav-hamburger span{width:22px;height:1.5px;background:var(--off-white);transition:all 0.3s ease}
+.nav-hamburger.active span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
+.nav-hamburger.active span:nth-child(2){opacity:0}
+.nav-hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
+
+@media (max-width: 768px) {
+  .nav-hamburger{display:flex}
+  section,
+  section > div {
+    padding: 100px 20px 80px !important;
+    max-width: 100% !important;
+  }
+  h1 {
+    font-size: clamp(28px, 8vw, 44px) !important;
+    line-height: 1.1 !important;
+  }
+  h2 {
+    font-size: 18px !important;
+    margin-top: 32px !important;
+  }
+  p, li {
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+  }
+  .navbar {
+    padding: 0 20px !important;
+  }
+  .nav-links {
+    display: flex !important;
+    position: fixed;
+    inset: 0;
+    top: 60px;
+    background: rgba(0,0,0,0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-20px);
+    visibility: hidden;
+    transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s ease;
+  }
+  .nav-links.mobile-open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    visibility: visible;
+  }
+  .nav-links.mobile-open a {
+    font-size: 18px;
+    color: var(--off-white);
+  }
+}
 </style>
 </head>
 <body>
@@ -85,6 +145,9 @@ img.logo:hover{opacity:0.7}
     <li><a href="/#contact">Contact</a></li>
   </ul>
   <a href="/#contact" class="nav-cta-btn nav-cta-desktop">Start a Project</a>
+  <div class="nav-hamburger" id="nav-hamburger" aria-label="Menu" role="button" tabindex="0">
+    <span></span><span></span><span></span>
+  </div>
 </nav>
 
 <section class="policy-section">
@@ -156,5 +219,29 @@ img.logo:hover{opacity:0.7}
   </div>
 </footer>
 
+<script>
+(function(){
+  var ham = document.getElementById('nav-hamburger');
+  var navLinks = document.querySelector('.nav-links');
+  if (!ham || !navLinks) return;
+  function closeMenu(){
+    ham.classList.remove('active');
+    navLinks.classList.remove('mobile-open');
+    document.body.style.overflow = '';
+  }
+  ham.addEventListener('click', function() {
+    var isOpen = navLinks.classList.contains('mobile-open');
+    if(isOpen){ closeMenu(); }
+    else {
+      ham.classList.add('active');
+      navLinks.classList.add('mobile-open');
+      document.body.style.overflow = 'hidden';
+    }
+  });
+  navLinks.querySelectorAll('a').forEach(function(a) {
+    a.addEventListener('click', function() { closeMenu(); });
+  });
+})();
+</script>
 </body>
 </html>
