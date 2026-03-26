@@ -111,21 +111,36 @@ h1.hero-tag,.hero-tag{font-family:var(--font-title);font-weight:700;font-size:cl
 
 /* HERO-TO-SECTION GRADIENT FADE */
 .hero-fade{height:80px;background:linear-gradient(to bottom,rgba(0,0,0,0.6),transparent);position:relative;z-index:1;margin-top:-80px;pointer-events:none}
-/* ═══ MOBILE SCROLL — DEFINITIVE FIX ═══
-   Strategy: every element inside .hero is a ghost (pointer-events:none).
-   Only .hero itself and .hero-buttons receive touch.
-   Native browser scroll always wins. */
+/* ═══ SCROLL — NATIVE ALWAYS WINS ═══ */
 html,body{overflow-y:auto!important;touch-action:pan-y!important}
+
+/* Hero: scroll passes through, children are ghosts */
 .hero{touch-action:pan-y!important;overflow:visible!important;pointer-events:auto!important}
-.hero-video,
-#hero-video-mobile,
-#hero-video-desktop,
 #logo-3d,
 #logo-3d canvas,
+#hero-video-desktop,
+#hero-video-mobile,
+.hero-video,
 .hero-scroll,
 .hero-fade,
 .hero::before,
-.hero::after{pointer-events:none!important}
+.hero::after{pointer-events:none!important;touch-action:none!important}
+.hero-content{pointer-events:auto!important;touch-action:auto!important}
+
+/* All sections: never trap scroll */
+#services,.services,
+#work,.work,
+#about,.about,
+#contact,.cta-section,
+.stats,.shapes-grid-section,
+.av-video-section,#presence,
+.marquee,.pricing-grid,
+.case-study,.case-study-video{
+  overflow-x:hidden;
+  overflow-y:visible;
+  touch-action:pan-y;
+}
+
 @media(max-width:768px){
   .hero-video{-webkit-transform:none!important;transform:none!important;will-change:auto!important}
 }
@@ -504,12 +519,14 @@ section{padding:60px 20px}
   }
 }
 
-/* FIX 3 — Hero video position on mobile */
+/* FIX 3 — Hero video position on mobile (9:16 video) */
 @media (max-width: 768px) {
   #hero-video-mobile {
+    object-fit: cover;
     object-position: center center;
-    width: 100%;
-    height: 100%;
+    width: 100% !important;
+    height: 100% !important;
+    transform: none !important;
   }
 }
 
@@ -629,6 +646,26 @@ section{padding:60px 20px}
 </script>
 </head>
 <body>
+<script>
+(function(){
+  var f=function(){
+    document.body.style.overflow='';
+    document.body.style.overflowY='auto';
+    document.documentElement.style.overflow='';
+    document.documentElement.style.overflowY='auto';
+    document.body.style.touchAction='pan-y';
+    document.documentElement.style.touchAction='pan-y';
+    document.body.style.height='';
+    document.documentElement.style.height='';
+  };
+  f();
+  document.addEventListener('DOMContentLoaded',f);
+  setTimeout(f,500);
+  setTimeout(f,1500);
+  setTimeout(f,3000);
+  window.forceScroll=f;
+})();
+</script>
 
 <!-- Video system handled by unified script before </body> -->
 
@@ -658,7 +695,7 @@ section{padding:60px 20px}
 <!-- HERO -->
 <section class="hero" id="hero" aria-label="Hero">
   <video id="hero-video-desktop" class="hero-video" autoplay muted loop playsinline preload="auto" style="display:none"><source src="hero-video/No-logo-hero.mp4" type="video/mp4"></video>
-  <video id="hero-video-mobile" class="hero-video" autoplay muted loop playsinline preload="auto" style="display:none"><source src="hero-video/AV-video.mp4" type="video/mp4"></video>
+  <video id="hero-video-mobile" class="hero-video" autoplay muted loop playsinline preload="auto" style="display:none"><source src="hero-video/Mobile-hero.mp4" type="video/mp4"></video>
   <div id="logo-3d"></div>
   <div class="hero-content">
     <h1 class="hero-tag">Digital Web Agency</h1>
@@ -1078,14 +1115,27 @@ section{padding:60px 20px}
   var bar = document.getElementById('preloader-bar');
   var preloader = document.getElementById('preloader');
   if(bar) bar.style.width='100%';
+
+  var hideLoader = function(){
+    if(!preloader) return;
+    preloader.style.opacity = '0';
+    preloader.style.pointerEvents = 'none';
+    preloader.style.transition = 'opacity 0.6s ease';
+    setTimeout(function(){ preloader.style.display='none'; }, 600);
+    if(window.forceScroll) window.forceScroll();
+  };
+
   // On mobile, fire immediately. On desktop, wait for GLB or timeout.
   if(window.innerWidth <= 768){
     setTimeout(function(){
-      if(preloader) preloader.classList.add('done');
-      setTimeout(function(){if(preloader)preloader.style.display='none'},500);
+      hideLoader();
       window.dispatchEvent(new Event('arya-ready'));
     },300);
   }
+
+  // Safety: always hide after 2s
+  window.addEventListener('load', hideLoader);
+  setTimeout(hideLoader, 2000);
 })();
 </script>
 
@@ -1327,14 +1377,13 @@ if (window.innerWidth > 768) {
 
   function init(){
 
-    // Ensure mobile scroll is never blocked by ScrollTrigger
-    if(isMob){
-      ScrollTrigger.normalizeScroll(false);
-      ScrollTrigger.config({ignoreMobileResize:true});
-      // Force native scroll — clear any JS-set overflow
-      document.body.style.cssText += 'overflow-y:auto!important;height:auto!important;';
-      document.documentElement.style.cssText += 'overflow-y:auto!important;';
-    }
+    // ScrollTrigger: native scroll priority
+    ScrollTrigger.normalizeScroll(false);
+    ScrollTrigger.config({
+      ignoreMobileResize:true,
+      autoRefreshEvents:'visibilitychange,DOMContentLoaded,load'
+    });
+    if(isMob && window.forceScroll) window.forceScroll();
 
     // NAVBAR
     gsap.to('.navbar',{y:0,duration:1,ease:'power4.out',delay:0.4});
@@ -1805,10 +1854,7 @@ if(window.innerWidth>768){
   function closeModal() {
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = 'visible';
-    document.body.style.overflowY = 'auto';
-    document.documentElement.style.overflow = 'visible';
-    document.documentElement.style.overflowY = 'auto';
+    if(window.forceScroll) window.forceScroll();
   }
 
   if (openBtn) {
@@ -1878,10 +1924,7 @@ if(window.innerWidth>768){
   function hideConfirmation() {
     confirmPopup.classList.remove('is-open');
     confirmPopup.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = 'visible';
-    document.body.style.overflowY = 'auto';
-    document.documentElement.style.overflow = 'visible';
-    document.documentElement.style.overflowY = 'auto';
+    if(window.forceScroll) window.forceScroll();
   }
 
   if (confirmCloseBtn) confirmCloseBtn.addEventListener('click', hideConfirmation);
@@ -1943,20 +1986,11 @@ if(window.innerWidth>768){
   if (!ham || !navLinks) return;
   var ctaBtn = document.querySelector('.nav-cta-btn');
 
-  // Single function — unlock scroll, no exceptions
-  function unlockScroll(){
-    document.body.style.overflow = 'visible';
-    document.body.style.overflowY = 'auto';
-    document.body.style.touchAction = 'pan-y';
-    document.documentElement.style.overflow = 'visible';
-    document.documentElement.style.overflowY = 'auto';
-    document.documentElement.style.touchAction = 'pan-y';
-  }
-
   function closeMenu(){
     ham.classList.remove('active');
     navLinks.classList.remove('mobile-open');
-    unlockScroll();
+    if(window.forceScroll) window.forceScroll();
+    setTimeout(function(){ if(window.forceScroll) window.forceScroll(); }, 350);
     if(ctaBtn) ctaBtn.style.display = '';
   }
 
@@ -1971,7 +2005,6 @@ if(window.innerWidth>768){
     }
   });
 
-  // ESC + click-outside close
   document.addEventListener('keydown', function(e){
     if(e.key==='Escape' && navLinks.classList.contains('mobile-open')) closeMenu();
   });
@@ -1979,7 +2012,6 @@ if(window.innerWidth>768){
     if(navLinks.classList.contains('mobile-open') && !navLinks.contains(e.target) && !ham.contains(e.target)) closeMenu();
   });
 
-  // Nav links → close menu, scroll to section, guarantee scroll unlocked
   navLinks.querySelectorAll('a[href^="#"]').forEach(function(link){
     link.addEventListener('click', function(e){
       e.preventDefault();
@@ -1987,20 +2019,14 @@ if(window.innerWidth>768){
       closeMenu();
       if(target){
         setTimeout(function(){
-          unlockScroll();
+          if(window.forceScroll) window.forceScroll();
           var top = target.getBoundingClientRect().top + window.pageYOffset - 70;
           window.scrollTo({top:top, behavior:'smooth'});
-          setTimeout(unlockScroll, 500);
+          setTimeout(function(){ if(window.forceScroll) window.forceScroll(); }, 500);
         }, 300);
       }
     });
   });
-
-  // Ongoing safety — re-unlock on focus and touchstart
-  window.addEventListener('focus', unlockScroll);
-  document.addEventListener('touchstart', function(){
-    if(!navLinks.classList.contains('mobile-open')) unlockScroll();
-  }, {passive:true});
 })();
 </script>
 <!-- COOKIE BANNER -->
@@ -2045,13 +2071,7 @@ window.addEventListener('load', function(){
     ScrollTrigger.refresh();
     ScrollTrigger.normalizeScroll(false);
   }
-  // Ensure body is always scrollable — definitive
-  document.body.style.overflow = 'visible';
-  document.body.style.overflowY = 'auto';
-  document.body.style.touchAction = 'pan-y';
-  document.documentElement.style.overflow = 'visible';
-  document.documentElement.style.overflowY = 'auto';
-  document.documentElement.style.touchAction = 'pan-y';
+  if(window.forceScroll) window.forceScroll();
 });
 </script>
 
