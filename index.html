@@ -88,7 +88,7 @@ button{font:inherit;border:none;background:none;cursor:pointer;color:inherit}
 .nav-hamburger{display:none}
 
 /* HERO */
-.hero{position:relative;width:100%;height:100vh;overflow:hidden;background:var(--black);padding:0}
+.hero{position:relative;width:100%;height:100vh;height:100dvh;overflow:hidden;background:var(--black);padding:0}
 .hero-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;opacity:0.55;will-change:opacity;-webkit-transform:translateZ(0);transform:translateZ(0)}
 #logo-3d{position:absolute;inset:0;z-index:1}
 #logo-3d canvas{display:block;width:100%!important;height:100%!important}
@@ -279,12 +279,11 @@ img.logo:hover{opacity:0.7}
 }
 @media(max-width:768px){
 #logo-3d{display:none!important}
-.hero-video{opacity:0.6!important}
-.hero{display:flex;align-items:flex-end}
-.hero-video{object-fit:cover;object-position:center center}
+.hero{height:100dvh}
+.hero-video{opacity:0.65!important;object-fit:cover;object-position:center center}
 .hero-tag{font-size:15px;letter-spacing:0.06em}
-.hero-sub{font-size:14px}
-.hero-content{padding:0 20px 6vh}
+.hero-sub{font-size:14px;margin-bottom:28px}
+.hero-content{padding:0 20px 8vh}
 .nav-links{display:none}
 .navbar{padding:0 20px;height:60px}
 .nav-cta-desktop{display:none}
@@ -356,15 +355,21 @@ section{padding:60px 20px}
   .nav-links.mobile-open a{font-size:18px;color:var(--off-white)}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 }
-/* MOBILE TOUCH TARGETS */
+/* MOBILE TOUCH TARGETS + LAYOUT */
 @media(max-width:768px){
   .nav-links a,.nav-cta-btn,.footer-col a,.pricing-cta,.hero-cta,.hero-demo-btn,.magnetic-btn,.cta-email,.ig-link,.option-pill,.modal-submit,.modal-close,.confirm-cta,#cookie-accept,#cookie-decline{min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center}
   .footer-col a{min-height:44px;display:flex;align-items:center}
   .about-video-wrap{min-height:300px}
   .hero-content{display:flex;flex-direction:column;justify-content:flex-end}
   .hero-scroll{display:none}
-  .hero-demo-btn{padding:14px 28px;font-size:13px;text-align:center;width:100%;justify-content:center}
-  .hero-cta{font-size:15px}
+  .hero-demo-btn{padding:16px 28px;font-size:14px;text-align:center;width:auto;justify-content:center;border-radius:6px}
+  .hero-cta{font-size:15px;padding:12px 0}
+  .cta-section{min-height:80vh;padding:60px 20px}
+  .cta-title{margin-bottom:16px}
+  .cta-sub{font-size:15px;margin-bottom:32px}
+  .cta-email{font-size:14px;margin-bottom:32px}
+  .magnetic-btn{padding:16px 40px;font-size:14px}
+  .cta-locations{margin-top:48px;font-size:12px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}.marquee-track{animation:none}}
 
@@ -883,23 +888,35 @@ section{padding:60px 20px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Observer.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
-<!-- THREE.JS -->
+<!-- PRELOADER: fire immediately (no GLB) -->
+<script>
+(function(){
+  var bar = document.getElementById('preloader-bar');
+  var preloader = document.getElementById('preloader');
+  if(bar) bar.style.width='100%';
+  setTimeout(function(){
+    if(preloader) preloader.classList.add('done');
+    setTimeout(function(){if(preloader)preloader.style.display='none'},500);
+    window.dispatchEvent(new Event('arya-ready'));
+  },400);
+})();
+</script>
+
+<!-- THREE.JS — 3D logo (desktop only) + CTA particles (all devices) -->
 <script type="module">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-/* ── HERO 3D — skip entirely on mobile ── */
+/* ── HERO 3D — desktop only ── */
 if (window.innerWidth > 768) {
 (function(){
   const container = document.getElementById('logo-3d');
   if(!container) return;
-  const isMobile = false; // only runs on desktop
-  // Ensure container has size (wait for layout if needed)
   const cw = container.clientWidth || window.innerWidth;
   const ch = container.clientHeight || window.innerHeight;
-  const renderer = new THREE.WebGLRenderer({antialias:!isMobile,alpha:true});
-  renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio,2));
+  const renderer = new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
   renderer.setSize(cw,ch);
   renderer.setClearColor(0x000000,0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -907,13 +924,12 @@ if (window.innerWidth > 768) {
   container.appendChild(renderer.domElement);
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(40,container.clientWidth/container.clientHeight,0.1,2000);
+  const camera = new THREE.PerspectiveCamera(40,cw/ch,0.1,2000);
   const pmrem = new THREE.PMREMGenerator(renderer);
   const roomEnv = new RoomEnvironment(renderer);
   scene.environment = pmrem.fromScene(roomEnv).texture;
   pmrem.dispose(); roomEnv.dispose();
 
-  // Lighting: ambient + directional + 3 colored point lights
   scene.add(new THREE.AmbientLight(0xffffff,0.4));
   const keyL = new THREE.DirectionalLight(0xffffff,1.6); keyL.position.set(-120,140,80); scene.add(keyL);
   const fillL = new THREE.DirectionalLight(0xffffff,0.25); fillL.position.set(80,-60,40); scene.add(fillL);
@@ -923,8 +939,6 @@ if (window.innerWidth > 768) {
 
   const masterGroup = new THREE.Group();
   scene.add(masterGroup);
-  const bar = document.getElementById('preloader-bar');
-  const preloader = document.getElementById('preloader');
 
   new GLTFLoader().load('3d-glb-logo/3D-logo.glb',
     function(gltf){
@@ -945,17 +959,9 @@ if (window.innerWidth > 768) {
       const size = box.getSize(new THREE.Vector3());
       model.position.sub(center);
       const maxDim = Math.max(size.x,size.y,size.z);
-      const scale = 80/maxDim;
-      model.scale.setScalar(scale);
+      model.scale.setScalar(80/maxDim);
       masterGroup.add(model);
       camera.position.z = 80*2.8;
-
-      if(bar) bar.style.width='100%';
-      setTimeout(()=>{
-        if(preloader) preloader.classList.add('done');
-        setTimeout(()=>{if(preloader)preloader.style.display='none'},500);
-        window.dispatchEvent(new Event('arya-ready'));
-      },200);
 
       masterGroup.rotation.y = -Math.PI*0.4;
       masterGroup.scale.set(0.001,0.001,0.001);
@@ -964,177 +970,87 @@ if (window.innerWidth > 768) {
       tl.to(masterGroup.rotation,{y:0,duration:2.4},0);
       tl.call(()=>{gsap.to(masterGroup.position,{y:2,duration:3.5,repeat:-1,yoyo:true,ease:'sine.inOut'})});
     },
-    function(xhr){if(xhr.lengthComputable&&bar)bar.style.width=(xhr.loaded/xhr.total*100)+'%'},
-    function(){
-      if(bar)bar.style.width='100%';
-      if(preloader){preloader.classList.add('done');setTimeout(()=>preloader.style.display='none',800)}
-      window.dispatchEvent(new Event('arya-ready'));
-    }
+    undefined,
+    function(){}
   );
 
-  // ── INTERACTIVE 3D: cursor-follow + inertia + idle drift ──
   const mouse = {x:0, y:0};
-  const pos = {x:0, y:0};       // smoothed position for model translate
-  const rot = {x:0, y:0};       // smoothed rotation
-  const vel = {x:0, y:0};       // velocity for inertia
+  const pos = {x:0, y:0};
+  const rot = {x:0, y:0};
+  const vel = {x:0, y:0};
   let mouseInHero = false;
   let idleTime = 0;
   const heroEl = document.querySelector('.hero');
 
-  if (!isMobile) {
-    heroEl.addEventListener('mouseenter', () => { mouseInHero = true; idleTime = 0; });
-    heroEl.addEventListener('mouseleave', () => { mouseInHero = false; });
+  heroEl.addEventListener('mouseenter', () => { mouseInHero = true; idleTime = 0; });
+  heroEl.addEventListener('mouseleave', () => { mouseInHero = false; });
+  window.addEventListener('mousemove', e => {
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
+    idleTime = 0;
+  });
 
-    window.addEventListener('mousemove', e => {
-      mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
-      idleTime = 0;
-    });
-  }
   container.style.pointerEvents = 'auto';
-
   let rendering = true;
   const heroObs = new IntersectionObserver(entries => { rendering = entries[0].isIntersecting; }, {threshold:0});
   heroObs.observe(heroEl);
 
-  // Scroll recede
   gsap.registerPlugin(ScrollTrigger);
-  const recedeProxy = {s:1, o:1, ty:0};
+  const recedeProxy = {s:1, o:1};
   gsap.to(recedeProxy, {
-    s:0.75, o:0, ty:-80, ease:'none',
+    s:0.75, o:0, ease:'none',
     scrollTrigger: {trigger:'.hero', start:'top top', end:'bottom top', scrub:true,
-      onUpdate: () => {
-        const baseScale = recedeProxy.s;
-        masterGroup.scale.setScalar(baseScale);
-        container.style.opacity = recedeProxy.o;
-      }
+      onUpdate: () => { masterGroup.scale.setScalar(recedeProxy.s); container.style.opacity = recedeProxy.o; }
     }
   });
 
-  // Sparkle particles around model on mouse move
-  const sparkGeo = new THREE.BufferGeometry();
-  const sparkCount = 60;
-  const sparkPos = new Float32Array(sparkCount * 3);
-  const sparkAlpha = new Float32Array(sparkCount);
-  const sparkVel = [];
-  for (let i = 0; i < sparkCount; i++) {
-    sparkPos[i*3] = sparkPos[i*3+1] = sparkPos[i*3+2] = 0;
-    sparkAlpha[i] = 0;
-    sparkVel.push({x:0,y:0,z:0,life:0});
-  }
-  sparkGeo.setAttribute('position', new THREE.BufferAttribute(sparkPos, 3));
-  const sparkMat = new THREE.PointsMaterial({color:0xc8ff00, size:1.5, transparent:true, opacity:0.6, blending:THREE.AdditiveBlending, depthWrite:false});
-  const sparks = new THREE.Points(sparkGeo, sparkMat);
-  scene.add(sparks);
-  let sparkIdx = 0;
-
-  function emitSpark() {
-    const i = sparkIdx % sparkCount;
-    sparkIdx++;
-    const p = sparkGeo.attributes.position;
-    p.setXYZ(i, masterGroup.position.x + (Math.random()-0.5)*20, masterGroup.position.y + (Math.random()-0.5)*20, (Math.random()-0.5)*15);
-    sparkVel[i] = {x:(Math.random()-0.5)*0.8, y:(Math.random()-0.5)*0.8, z:(Math.random()-0.5)*0.4, life:1.0};
-    p.needsUpdate = true;
-  }
-
-  function updateSparks() {
-    const p = sparkGeo.attributes.position;
-    for (let i = 0; i < sparkCount; i++) {
-      const v = sparkVel[i];
-      if (v.life <= 0) continue;
-      v.life -= 0.015;
-      p.setX(i, p.getX(i) + v.x);
-      p.setY(i, p.getY(i) + v.y);
-      p.setZ(i, p.getZ(i) + v.z);
-      v.x *= 0.98; v.y *= 0.98; v.z *= 0.98;
-      if (v.life <= 0) { p.setXYZ(i, 0, -9999, 0); }
-    }
-    p.needsUpdate = true;
-  }
-
-  // ── Circular motion detector ──
-  // Tracks the angle of cursor relative to hero center.
-  // When cursor moves in circles, the angular delta accumulates → spins the model.
-  let prevAngle = null;
-  let spinY = 0;        // accumulated spin from circular gestures
-  let spinMomentum = 0; // decaying spin velocity
-
-  if (!isMobile) window.addEventListener('mousemove', e => {
+  let prevAngle = null, spinY = 0, spinMomentum = 0;
+  window.addEventListener('mousemove', e => {
     if (!mouseInHero) { prevAngle = null; return; }
-    const cx = window.innerWidth / 2;
-    const cy = window.innerHeight / 2;
-    const dx = e.clientX - cx;
-    const dy = e.clientY - cy;
-    const dist = Math.sqrt(dx*dx + dy*dy);
-    // Only detect circles when cursor is far enough from center
-    if (dist < 60) { prevAngle = null; return; }
+    const cx = window.innerWidth/2, cy = window.innerHeight/2;
+    const dx = e.clientX - cx, dy = e.clientY - cy;
+    if (Math.sqrt(dx*dx+dy*dy) < 60) { prevAngle = null; return; }
     const angle = Math.atan2(dy, dx);
     if (prevAngle !== null) {
       let delta = angle - prevAngle;
-      // Handle wrap-around at ±PI
-      if (delta > Math.PI) delta -= Math.PI * 2;
-      if (delta < -Math.PI) delta += Math.PI * 2;
+      if (delta > Math.PI) delta -= Math.PI*2;
+      if (delta < -Math.PI) delta += Math.PI*2;
       spinMomentum += delta * 0.15;
     }
     prevAngle = angle;
   });
 
-  const animSpeed = isMobile ? 0.5 : 1.0;
   let frame = 0;
   function animate() {
     requestAnimationFrame(animate);
     if (!rendering) return;
     frame++;
     idleTime += 0.016;
-
-    // Decay spin momentum
     spinMomentum *= 0.92;
     spinY += spinMomentum;
 
-    const lerpPos = 0.06;
-    const lerpRot = 0.04;
-
     if (mouseInHero) {
-      const targetX = mouse.x * 40;
-      const targetY = -mouse.y * 25;
-
       const prevX = pos.x, prevY = pos.y;
-      pos.x += (targetX - pos.x) * lerpPos;
-      pos.y += (targetY - pos.y) * lerpPos;
-      vel.x = pos.x - prevX;
-      vel.y = pos.y - prevY;
-
-      rot.x += (-mouse.y * 0.35 - rot.x) * lerpRot;
-      rot.y += (mouse.x * 0.45 - rot.y) * lerpRot;
-
-      // Apply position + rotation + circular spin
+      pos.x += (mouse.x*40 - pos.x) * 0.06;
+      pos.y += (-mouse.y*25 - pos.y) * 0.06;
+      vel.x = pos.x - prevX; vel.y = pos.y - prevY;
+      rot.x += (-mouse.y*0.35 - rot.x) * 0.04;
+      rot.y += (mouse.x*0.45 - rot.y) * 0.04;
       masterGroup.position.x = pos.x;
-      masterGroup.position.y = pos.y + Math.sin(frame * 0.015) * 1.5;
-      masterGroup.rotation.x = rot.x + vel.y * 0.15;
-      masterGroup.rotation.y = rot.y + vel.x * 0.08 + spinY;
-
-      const speed = Math.sqrt(vel.x*vel.x + vel.y*vel.y);
-      const spinSpeed = Math.abs(spinMomentum);
-      if ((speed > 0.3 || spinSpeed > 0.02) && frame % 2 === 0) emitSpark();
-
+      masterGroup.position.y = pos.y + Math.sin(frame*0.015)*1.5;
+      masterGroup.rotation.x = rot.x + vel.y*0.15;
+      masterGroup.rotation.y = rot.y + vel.x*0.08 + spinY;
     } else {
-      // Inertia: position + spin keep going with decay
       pos.x *= 0.97; pos.y *= 0.97;
       vel.x *= 0.95; vel.y *= 0.95;
       masterGroup.position.x = pos.x;
       prevAngle = null;
-
-      // Idle: floating + slow rotation + residual spin
-      const breathe = Math.sin(frame * 0.012) * 2.5;
-      masterGroup.position.y = pos.y + breathe;
-      masterGroup.rotation.y = spinY + frame * 0.003 * animSpeed;
-      masterGroup.rotation.x += 0.0008 * animSpeed;
-
+      masterGroup.position.y = pos.y + Math.sin(frame*0.012)*2.5;
+      masterGroup.rotation.y = spinY + frame*0.003;
+      masterGroup.rotation.x += 0.0008;
       rot.x *= 0.98; rot.y *= 0.98;
-      masterGroup.rotation.x += rot.x * 0.1;
+      masterGroup.rotation.x += rot.x*0.1;
     }
-
-    updateSparks();
     renderer.render(scene, camera);
   }
   animate();
@@ -1142,32 +1058,18 @@ if (window.innerWidth > 768) {
   window.addEventListener('resize', () => {
     const w = container.clientWidth || window.innerWidth;
     const h = container.clientHeight || window.innerHeight;
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    renderer.setSize(w, h);
+    camera.aspect = w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h);
   });
 })();
-} else {
-  // Mobile: no 3D — fire preloader done immediately
-  (function(){
-    var bar = document.getElementById('preloader-bar');
-    var preloader = document.getElementById('preloader');
-    if(bar) bar.style.width='100%';
-    setTimeout(function(){
-      if(preloader) preloader.classList.add('done');
-      setTimeout(function(){if(preloader)preloader.style.display='none'},500);
-      window.dispatchEvent(new Event('arya-ready'));
-    },300);
-  })();
 }
 
-/* ── CTA PARTICLE SPHERE — skip on mobile ── */
-if (window.innerWidth > 768) {
+/* ── CTA PARTICLE SPHERE ── */
 (function(){
   const container=document.getElementById('cta-particles');
   if(!container)return;
-  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  const isMob=window.innerWidth<=768;
+  const renderer=new THREE.WebGLRenderer({antialias:!isMob,alpha:true});
+  renderer.setPixelRatio(isMob?1:Math.min(window.devicePixelRatio,2));
   renderer.setSize(container.clientWidth,container.clientHeight);
   renderer.setClearColor(0x000000,0);
   renderer.domElement.style.pointerEvents='none';
@@ -1175,19 +1077,18 @@ if (window.innerWidth > 768) {
   const scene=new THREE.Scene();
   const camera=new THREE.PerspectiveCamera(50,container.clientWidth/container.clientHeight,0.1,1000);
   camera.position.z=200;
-  const count=800;const positions=new Float32Array(count*3);
+  const count=isMob?400:800;const positions=new Float32Array(count*3);
   for(let i=0;i<count;i++){const phi=Math.acos(2*Math.random()-1);const theta=2*Math.PI*Math.random();const r=80;positions[i*3]=r*Math.sin(phi)*Math.cos(theta);positions[i*3+1]=r*Math.sin(phi)*Math.sin(theta);positions[i*3+2]=r*Math.cos(phi)}
   const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(positions,3));
-  const mat=new THREE.PointsMaterial({color:0xffffff,size:1.2,transparent:true,opacity:0.25});
+  const mat=new THREE.PointsMaterial({color:0xffffff,size:isMob?1.5:1.2,transparent:true,opacity:isMob?0.35:0.25});
   const sphere=new THREE.Points(geo,mat);scene.add(sphere);
   let active=false;
   const obs=new IntersectionObserver(entries=>{active=entries[0].isIntersecting},{threshold:0});
   obs.observe(container.closest('section')||container);
   function animate(){requestAnimationFrame(animate);if(!active)return;sphere.rotation.y+=0.0008;sphere.rotation.x+=0.0003;renderer.render(scene,camera)}
   animate();
-  window.addEventListener('resize',()=>{camera.aspect=container.clientWidth/container.clientHeight;camera.updateProjectionMatrix();renderer.setSize(container.clientWidth,container.clientHeight)});
+  window.addEventListener('resize',()=>{const w=container.clientWidth||window.innerWidth;const h=container.clientHeight||window.innerHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)});
 })();
-}
 </script>
 
 <!-- GSAP + LENIS + INTERACTIONS -->
@@ -1197,18 +1098,26 @@ if (window.innerWidth > 768) {
   gsap.registerPlugin(ScrollTrigger,Observer);
 
   const isMob=window.innerWidth<=768;
-  const lenis=new Lenis({lerp:isMob?0.12:0.09,smoothWheel:true,wheelMultiplier:isMob?0.8:1.0,duration:isMob?0.8:1.0,touchMultiplier:1.5,smoothTouch:false});
-  lenis.on('scroll',ScrollTrigger.update);
-  gsap.ticker.add(time=>lenis.raf(time*1000));
-  gsap.ticker.lagSmoothing(0);
+  var lenis=null;
 
-  // Smooth-scroll anchor links via Lenis (native scroll-behavior is overridden)
+  // Only use Lenis on desktop — mobile gets native scroll (no jank)
+  if(!isMob){
+    lenis=new Lenis({lerp:0.09,smoothWheel:true,wheelMultiplier:1.0,duration:1.0});
+    lenis.on('scroll',ScrollTrigger.update);
+    gsap.ticker.add(time=>lenis.raf(time*1000));
+    gsap.ticker.lagSmoothing(0);
+  }
+
+  // Smooth-scroll anchor links
   document.querySelectorAll('a[href^="#"]').forEach(function(a){
     a.addEventListener('click',function(e){
       var href=a.getAttribute('href');
       if(href==='#')return;
       var target=document.querySelector(href);
-      if(target){e.preventDefault();lenis.scrollTo(target,{offset:0,duration:1.2});}
+      if(!target)return;
+      e.preventDefault();
+      if(lenis){lenis.scrollTo(target,{offset:0,duration:1.2});}
+      else{target.scrollIntoView({behavior:'smooth',block:'start'});}
     });
   });
 
@@ -1240,7 +1149,7 @@ if (window.innerWidth > 768) {
       heroVid.playsInline = true;
       var hp = heroVid.play();
       if (hp && hp.catch) hp.catch(function(){});
-      gsap.fromTo(heroVid, {opacity:0}, {opacity:isMob?0.6:0.55, duration:isMob?1.5:2.5, ease:'power2.inOut', delay:0.2});
+      gsap.fromTo(heroVid, {opacity:0}, {opacity:isMob?0.65:0.55, duration:isMob?1.2:2.5, ease:'power2.inOut', delay:0.1});
     }
     // Scroll indicator fades in after delay
     gsap.fromTo('.hero-scroll', {opacity:0, y:10}, {opacity:1, y:0, duration:1.2, ease:'power3.out', delay:2.2});
@@ -1338,8 +1247,13 @@ if (window.innerWidth > 768) {
       function forcePlay(v) {
         if (!v || v.paused === false) return;
         v.muted = true;
+        v.setAttribute('muted','');
+        v.setAttribute('playsinline','');
         var p = v.play();
-        if (p && p.catch) p.catch(function(){ setTimeout(function(){ v.play(); }, 200); });
+        if (p && p.catch) p.catch(function(){
+          // iOS may need user gesture — try again after short delay
+          setTimeout(function(){ v.muted=true; v.play(); }, 300);
+        });
       }
 
       // Set up each video
@@ -1431,6 +1345,23 @@ if (window.innerWidth > 768) {
           if (inView) forcePlay(v);
         });
       });
+
+      // iOS first-touch unlock — play all visible videos on first user interaction
+      var unlocked = false;
+      function unlockVideos(){
+        if(unlocked) return;
+        unlocked = true;
+        allVideos.forEach(function(v){
+          v.muted = true;
+          var rect = v.getBoundingClientRect();
+          var inView = rect.top < window.innerHeight && rect.bottom > 0;
+          if(inView) forcePlay(v);
+        });
+        document.removeEventListener('touchstart', unlockVideos);
+        document.removeEventListener('click', unlockVideos);
+      }
+      document.addEventListener('touchstart', unlockVideos, {passive:true,once:true});
+      document.addEventListener('click', unlockVideos, {once:true});
     })();
 
     // ABOUT PARALLAX
@@ -1887,16 +1818,35 @@ if(window.innerWidth>768){
   var ham = document.getElementById('nav-hamburger');
   var navLinks = document.querySelector('.nav-links');
   if (!ham || !navLinks) return;
+
+  function closeMenu(){
+    ham.classList.remove('active');
+    navLinks.classList.remove('mobile-open');
+    document.body.style.overflow = '';
+  }
+
   ham.addEventListener('click', function() {
-    ham.classList.toggle('active');
-    navLinks.classList.toggle('mobile-open');
-    document.body.style.overflow = navLinks.classList.contains('mobile-open') ? 'hidden' : '';
+    var isOpen = navLinks.classList.contains('mobile-open');
+    if(isOpen){ closeMenu(); }
+    else {
+      ham.classList.add('active');
+      navLinks.classList.add('mobile-open');
+      document.body.style.overflow = 'hidden';
+    }
   });
+
   navLinks.querySelectorAll('a').forEach(function(a) {
     a.addEventListener('click', function() {
-      ham.classList.remove('active');
-      navLinks.classList.remove('mobile-open');
-      document.body.style.overflow = '';
+      closeMenu();
+      var href = a.getAttribute('href');
+      if(href && href.startsWith('#') && href !== '#'){
+        var target = document.querySelector(href);
+        if(target){
+          setTimeout(function(){
+            target.scrollIntoView({behavior:'smooth',block:'start'});
+          }, 100);
+        }
+      }
     });
   });
 })();
@@ -1935,14 +1885,13 @@ if(window.innerWidth>768){
   }
 })();
 </script>
-<!-- MOBILE VIDEO PRELOAD OPTIMIZATION -->
+<!-- MOBILE VIDEO OPTIMIZATION — set preload to metadata (not none) so autoplay works -->
 <script>
 if(navigator.maxTouchPoints > 0){
   document.querySelectorAll('video').forEach(function(v){
-    // Keep hero video preloaded for instant playback; defer others
     if(!v.classList.contains('hero-video')){
-      v.preload = 'none';
-      v.setAttribute('preload','none');
+      v.preload = 'metadata';
+      v.setAttribute('preload','metadata');
     }
   });
 }
