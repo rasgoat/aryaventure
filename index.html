@@ -2133,7 +2133,10 @@ window.addEventListener('load', function(){
     activeHero.play().catch(function(){});
   }
 
-  // iOS Safari unlock — first touch plays hero
+  // iOS Safari unlock — play hero on first user interaction
+  // CRITICAL: never call .play() synchronously inside touchstart —
+  // iOS treats that as a media gesture and kills the scroll.
+  // Use touchend (fires after scroll intent is resolved) and click.
   var unlocked = false;
   var unlock = function() {
     if(unlocked) return;
@@ -2142,7 +2145,7 @@ window.addEventListener('load', function(){
       activeHero.play().catch(function(){});
     }
   };
-  document.addEventListener('touchstart', unlock, {once: true, passive: true});
+  document.addEventListener('touchend', unlock, {once: true, passive: true});
   document.addEventListener('click', unlock, {once: true});
 
   // Section videos — play on scroll into view, preload 200px before
@@ -2171,15 +2174,15 @@ window.addEventListener('load', function(){
     videoObserver.observe(v);
   });
 
-  // After first scroll interaction on mobile, pre-unlock all section videos
+  // After first interaction on mobile, pre-unlock all section videos
+  // Use touchend, not touchstart — same reason as hero unlock above
   if(isMobile) {
     var preUnlock = function() {
       sectionVideos.forEach(function(v) {
         v.play().then(function(){ v.pause(); }).catch(function(){});
       });
-      window.removeEventListener('touchstart', preUnlock);
     };
-    window.addEventListener('touchstart', preUnlock, {once: true, passive: true});
+    window.addEventListener('touchend', preUnlock, {once: true, passive: true});
   }
 
 })();
