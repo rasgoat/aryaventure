@@ -111,14 +111,19 @@ h1.hero-tag,.hero-tag{font-family:var(--font-title);font-weight:700;font-size:cl
 
 /* HERO-TO-SECTION GRADIENT FADE */
 .hero-fade{height:80px;background:linear-gradient(to bottom,rgba(0,0,0,0.6),transparent);position:relative;z-index:1;margin-top:-80px;pointer-events:none}
-/* Hero videos — never intercept touch */
-#hero-video-mobile,#hero-video-desktop{pointer-events:none}
-/* Mobile scroll fix — aggressive */
+/* Hero — block touch on all overlays, allow scroll through hero itself */
+#hero-video-mobile,#hero-video-desktop{pointer-events:none!important;touch-action:none!important}
+.hero-video{pointer-events:none!important;touch-action:none!important}
+#logo-3d{pointer-events:none!important;touch-action:none!important}
+#logo-3d canvas{pointer-events:none!important;touch-action:none!important}
+.hero::before,.hero::after{pointer-events:none!important}
+.hero-scroll{pointer-events:none!important;touch-action:none!important}
+/* Fix 2 — Hero itself must propagate scroll */
+.hero{touch-action:pan-y!important;pointer-events:auto!important}
+/* Mobile scroll fix */
 @media(max-width:768px){
-  .hero{overflow:visible!important;touch-action:pan-y!important}
-  .hero,.hero *{touch-action:pan-y!important}
+  .hero{overflow:visible!important}
   .hero-video{-webkit-transform:none!important;transform:none!important;will-change:auto!important}
-  #logo-3d{pointer-events:none!important}
 }
 
 /* PRESENCE */
@@ -1790,6 +1795,9 @@ if(window.innerWidth>768){
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    document.body.style.overflowY = '';
+    document.documentElement.style.overflow = '';
+    document.documentElement.style.overflowY = '';
   }
 
   if (openBtn) {
@@ -1860,6 +1868,9 @@ if(window.innerWidth>768){
     confirmPopup.classList.remove('is-open');
     confirmPopup.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    document.body.style.overflowY = '';
+    document.documentElement.style.overflow = '';
+    document.documentElement.style.overflowY = '';
   }
 
   if (confirmCloseBtn) confirmCloseBtn.addEventListener('click', hideConfirmation);
@@ -1922,12 +1933,20 @@ if(window.innerWidth>768){
 
   var ctaBtn = document.querySelector('.nav-cta-btn');
 
+  // Safety net — force scroll enabled
+  var forceScroll = function(){
+    document.body.style.overflow = '';
+    document.body.style.overflowY = '';
+    document.documentElement.style.overflow = '';
+    document.documentElement.style.overflowY = '';
+    document.body.style.touchAction = 'pan-y';
+    document.documentElement.style.touchAction = 'pan-y';
+  };
+
   function closeMenu(){
     ham.classList.remove('active');
     navLinks.classList.remove('mobile-open');
-    document.body.style.overflow = '';
-    document.body.style.overflowY = 'auto';
-    document.documentElement.style.overflowY = 'auto';
+    forceScroll();
     if(ctaBtn) ctaBtn.style.display = '';
   }
 
@@ -1942,6 +1961,20 @@ if(window.innerWidth>768){
     }
   });
 
+  // Close on ESC key
+  document.addEventListener('keydown', function(e) {
+    if(e.key === 'Escape' && navLinks.classList.contains('mobile-open')){
+      closeMenu();
+    }
+  });
+
+  // Close on click outside menu
+  document.addEventListener('click', function(e) {
+    if(navLinks.classList.contains('mobile-open') && !navLinks.contains(e.target) && !ham.contains(e.target)){
+      closeMenu();
+    }
+  });
+
   // Nav link smooth scroll on mobile
   navLinks.querySelectorAll('a[href^="#"]').forEach(function(link) {
     link.addEventListener('click', function(e) {
@@ -1950,18 +1983,19 @@ if(window.innerWidth>768){
       var target = document.querySelector(href);
       closeMenu();
       if(target){
-        // Wait for menu close animation, then smooth scroll
         setTimeout(function(){
-          // Force scroll unlock before navigating
-          document.body.style.overflow = '';
-          document.body.style.overflowY = 'auto';
-          document.documentElement.style.overflowY = 'auto';
+          forceScroll();
           var top = target.getBoundingClientRect().top + window.pageYOffset - 70;
           window.scrollTo({top:top, behavior:'smooth'});
+          // Safety: force scroll again after scrollTo completes
+          setTimeout(forceScroll, 500);
         }, 300);
       }
     });
   });
+
+  // Re-enable scroll on window focus (e.g. returning to tab)
+  window.addEventListener('focus', forceScroll);
 })();
 </script>
 <!-- COOKIE BANNER -->
