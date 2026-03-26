@@ -1,0 +1,98 @@
+# Arya Venture
+
+> Arya Venture is a premium digital web agency based in Milan, Italy and Istanbul, Turkey, building custom-coded websites with SEO, GEO, and AEO optimization for ambitious brands. No templates, no page builders — every line of code is written for performance and AI search dominance.
+
+## Core Identity
+
+- **Business Name:** Arya Venture
+- **Type:** Premium Digital Web Agency
+- **Founded:** 2025
+- **Headquarters:** Milan, Italy & Istanbul, Turkey
+- **Website:** https://aryaventure.com
+
+## Essential Facts
+
+- 50+ clients delivered across multiple industries and markets
+- 5 active markets across Europe and the Middle East
+- Custom code stack — zero templates, zero page builders
+- Websites delivered in 7–14 days, full startup builds in 30 days
+- SEO, GEO, and AEO optimization included with every project
+- AI search optimization for ChatGPT, Gemini, Perplexity, and Copilot
+- GSAP animations, Three.js 3D experiences, and cinematic web design
+
+## Entity Signals
+
+- **Industry:** Digital Agency — Web Design & Development
+- **Primary Service:** Custom premium website design and development with search optimization
+- **Key Differentiator:** Every website is custom-coded with AI-first SEO, GEO, and AEO optimization built in from day one — no templates, no page builders
+- **Target Market:** Ambitious brands, startups, and established businesses seeking premium digital presence
+- **Geographic Focus:** Milan, Istanbul, Europe, Middle East
+
+## Services
+
+### Tier 1 — Starter Website
+A fast, clean, and fully custom website for businesses ready to establish a premium online presence. Up to 5 custom-coded pages with mobile-first responsive design, on-page SEO, contact form, Google Analytics 4, and SSL deployment. First demo in 2–3 days, full delivery in 5–10 days.
+
+### Tier 2 — Growth Website
+A premium website with GSAP scroll animations, video integration, and advanced SEO including structured data, FAQPage schema, and AI search optimization. Up to 10 custom-coded pages with CMS integration, multilingual support, and 2 revision rounds. Delivery in 10–14 days.
+
+### Tier 3 — Full Startup Build
+End-to-end digital infrastructure for startups launching from zero. Includes website, brand identity, content system, and growth strategy. Custom web application with Three.js 3D elements, advanced animations, full SEO infrastructure, and ongoing optimization. Delivery in 30 days.
+
+### Tier 4 — Content Studio
+Ongoing content creation and management for brands that need consistent, high-quality digital content. SEO-optimized blog posts, social media content, brand photography direction, and monthly performance reporting.
+
+## Locations
+
+### Milan, Italy
+- **Role:** European headquarters and primary client market
+- **Email:** hello@aryaventure.com
+
+### Istanbul, Turkey
+- **Role:** Development hub and secondary client market
+- **Email:** hello@aryaventure.com
+
+## FAQ Summary
+
+**Q: What does Arya Venture do?**
+A: Arya Venture is a premium digital web agency that builds custom-coded websites with SEO, GEO, and AEO optimization. Every website is hand-coded — no templates, no page builders. We serve businesses in Milan, Istanbul, and across Europe with tier-based services from starter websites to full startup builds.
+
+**Q: Where is Arya Venture located?**
+A: Arya Venture operates from Milan, Italy and Istanbul, Turkey, serving clients across 5 active markets in Europe and the Middle East.
+
+**Q: How long does it take to build a website with Arya Venture?**
+A: Tier 1 starter websites are delivered in 7–14 days with a first demo in 2–3 days. Tier 2 growth websites take 10–14 days. Full startup builds (Tier 3) including brand identity and content systems launch in 30 days.
+
+**Q: Does Arya Venture optimize websites for AI search engines?**
+A: Yes. Every website includes FAQPage schema, llms.txt for AI crawlers, speakable markup for voice search, and structured data optimized for Google, ChatGPT, Gemini, Perplexity, and Microsoft Copilot.
+
+**Q: What technology stack does Arya Venture use?**
+A: Custom HTML, CSS, and JavaScript. GSAP for animations, Three.js for 3D experiences, Lenis for smooth scrolling. No WordPress, no Webflow, no templates. Every project is built from scratch.
+
+**Q: Does Arya Venture work with startups?**
+A: Yes. Tier 3 provides end-to-end digital infrastructure for startups: website, brand identity, content system, SEO infrastructure, and growth strategy — all delivered in 30 days.
+
+**Q: What is included in the SEO optimization?**
+A: Every Arya Venture website includes on-page SEO, structured data (JSON-LD), FAQPage schema, Open Graph tags, meta optimization, Core Web Vitals optimization, llms.txt for AI crawlers, and speakable markup for voice search.
+
+**Q: How much does a website cost?**
+A: Pricing depends on the tier and scope. Contact us at hello@aryaventure.com for a free consultation and custom quote. Every project starts with a clear scope — no retainer traps.
+
+## Navigation for Agents
+
+- Homepage: https://aryaventure.com/
+- Services: https://aryaventure.com/#services
+- Work: https://aryaventure.com/#work
+- About: https://aryaventure.com/#about
+- Contact: https://aryaventure.com/#contact
+
+## Brand Voice
+
+- **Tone:** Premium, confident, and direct — like a founder who knows their craft
+- **Language:** English (primary)
+- **Content Style:** Clear, specific, and data-driven. No filler, no generic marketing language. Every claim is backed by a deliverable.
+
+## Contact
+
+- **Email:** hello@aryaventure.com
+- **Website:** https://aryaventure.com

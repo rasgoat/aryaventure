@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>OG Image Generator</title>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh}
+.og{width:1200px;height:630px;background:#000;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.wordmark{font-family:'Clash Display',sans-serif;font-weight:700;font-size:72px;color:#ffffff;letter-spacing:0.12em;text-transform:uppercase}
+.subtitle{font-family:'Satoshi',sans-serif;font-weight:400;font-size:24px;color:rgba(255,255,255,0.4);margin-top:16px}
+.url{position:absolute;bottom:36px;right:48px;font-family:'Satoshi',sans-serif;font-weight:400;font-size:18px;color:#c8ff00}
+</style>
+</head>
+<body>
+<div class="og" id="og">
+  <div class="wordmark">ARYAVENTURE</div>
+  <div class="subtitle">Premium Digital Agency</div>
+  <div class="url">aryaventure.com</div>
+</div>
+<script>
+// Download button for convenience
+document.addEventListener('keydown', e => {
+  if (e.key === 's' && (e.metaKey || e.ctrlKey)) {
+    e.preventDefault();
+    const el = document.getElementById('og');
+    // Use html2canvas if available, otherwise alert
+    alert('Open this page in browser, take a screenshot at 1200x630, or use a screenshot tool.');
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+# ARYA VENTURE — GLOBAL CURSOR RULES
+# ====================================
+# Read automatically on every Cursor session.
+# These are non-negotiable standards for every Arya project.
+
+## CORE PHILOSOPHY
+# Arya builds premium custom websites — no templates, no bloat, no shortcuts.
+# Every site must perform like a billion-dollar brand.
+# AI-first methodology: optimize for Google AND AI search engines (ChatGPT, Gemini, Perplexity).
+
+## SEO LIBRARY INTEGRATION
+# At session start, always read:
+# 1. /arya-core/seo-library/MASTER_SEO.md (universal SEO rules)
+# 2. /arya-core/seo-library/verticals/[relevant-vertical]-seo.md (industry module)
+# 3. /arya-core/seo-library/client-configs/[client-name].md (client config)
+# 4. /arya-core/seo-library/prompts/seo-agent.md (SEO persona activation)
+
+## SEMANTIC HTML — NON-NEGOTIABLE
+- Use semantic HTML over div nesting. Every component must be extractable by AI crawlers without JS execution.
+- Structure rules: use <main>, <article>, <section>, <header>, <footer>, <aside>, <nav> strictly — NO div soup.
+- Divs are only permitted for layout wrappers with no semantic meaning (flex/grid containers).
+- Every page must have exactly ONE <main> element containing the primary content.
+- Use <article> for self-contained content blocks (blog posts, service cards, case studies).
+- Use <section> for thematic groupings within <main>, each with its own heading.
+- Use <aside> for supplementary content (sidebars, related links, CTAs).
+
+## HEADING HIERARCHY — STRICT RULES
+- Every H1 must state the brand + core value proposition in under 12 words.
+- Only ONE H1 per page. No exceptions.
+- Every H2 must be a direct answer to a high-intent user query (question format preferred).
+- Every H3 must be a supporting fact or named feature.
+- Never skip heading levels (H1 → H3 without H2 is forbidden).
+- Headings must form a logical outline — if you extract only headings, the page's purpose must be clear.
+
+## ZERO CLS POLICY
+- All hero videos and images use aspect-ratio boxes with explicit width/height attributes.
+- All fonts use font-display: swap with fallback system fonts declared.
+- No layout shift from dynamic content injection — reserve space with min-height or aspect-ratio.
+- All above-fold images must have explicit width and height attributes.
+- Ad slots and embeds must have reserved dimensions.
+
+## IMAGE RULES
+- All images: descriptive alt text in the page's primary language.
+- Never empty alt text. Never generic alt text like "image1.jpg" or "photo".
+- Alt text must describe what's in the image AND its relevance to the page content.
+- Format: "[Subject] — [Context/Relevance]" (e.g., "Freight truck crossing Bosphorus Bridge — EGE EKSPRES international transport fleet")
+- Use WebP format with JPEG/PNG fallback via <picture> element.
+- Lazy load all below-fold images with loading="lazy".
+- Above-fold hero images: use fetchpriority="high" and preload in <head>.
+- All images must be properly sized — never serve a 4000px image in a 400px container.
+
+## PERFORMANCE — NON-NEGOTIABLE
+- will-change and transform: translateZ(0) for all animated elements (GPU compositing).
+- RAF-throttled scroll handlers — never attach heavy logic directly to scroll events.
+- IntersectionObserver for all reveal/scroll animations — no scroll-position calculations.
+- Lazy loading on all below-fold images and iframes.
+- Critical CSS inlined in <head>, non-critical CSS deferred.
+- No render-blocking scripts — all JS deferred or async except critical inline scripts.
+- Preconnect to external origins (Google Fonts, analytics, CDNs).
+- Target: LCP < 2.5s, CLS = 0, INP < 200ms on mobile.
+
+## AI SEARCH OPTIMIZATION (AIO) — CORE RULES
+- Every section must have a clear extractable "core claim" — one sentence that summarizes the section's value for an AI crawler.
+- Write in natural language patterns that match how people ask AI assistants questions.
+- Entity clarity: brand name, location, category, and USP must appear in first 100 words of every page.
+- FAQ section mandatory on every site with minimum 6 questions in natural conversational language.
+- Content must pass the "AI extraction test": if an LLM scraped only the text, would it know exactly what this business does, where it operates, and why to choose it?
+- Use `speakable` property in WebPage/Article schema to mark most quotable content sections (entity signal block, core claims, FAQ answers).
+- Allow ALL AI crawlers in robots.txt: GPTBot, OAI-SearchBot, ChatGPT-User, Google-Extended, PerplexityBot, ClaudeBot, Applebot-Extended, cohere-ai, Bytespider.
+
+## STRUCTURED DATA — JSON-LD
+- JSON-LD must be injected in <head>, never inline in body.
+- FAQPage schema required on every site in a dedicated FAQ section.
+- LocalBusiness or Organization schema required on every site.
+- BreadcrumbList schema on all inner pages.
+- All schema must validate against Google's Rich Results Test before deployment.
+- Use templates from /arya-core/seo-library/templates/schema-master.json.
+
+## llms.txt
+- llms.txt file required at root of every deployment.
+- Must be plain markdown — no JS, no styling, pure extractable content.
+- Use template from /arya-core/seo-library/templates/llms-txt-template.md.
+- Must include: business identity, services, locations, FAQ summary, contact information.
+
+## CONTENT RULES
+- No keyword stuffing — semantic density over repetition.
+- BLUF (Bottom Line Up Front): the most important claim comes first in every section.
+- Information Gain standard: every paragraph must add extractable value. No fluff, no filler.
+- Internal linking: every service page links to at least 2 other relevant pages with descriptive anchor text.
+- Anchor text must be descriptive (never "click here" or "learn more" as standalone links).
+
+## META & SOCIAL
+- Open Graph tags required on every page (og:title, og:description, og:image, og:url, og:type, og:locale).
+- Twitter Card tags required (twitter:card, twitter:title, twitter:description, twitter:image).
+- Canonical tags on every page — self-referencing on originals, pointing to canonical on variants.
+- hreflang tags required on all multilingual sites with x-default fallback.
+
+## MULTILINGUAL
+- Language variants use clean subdirectory structure: /it/, /en/, /tr/.
+- Each language version has unique meta title, description, and OG tags — never auto-translated.
+- hreflang implementation must include all language variants plus x-default.
+- Language toggle must not break URL structure.
+- Use lang attribute on <html> tag matching the page language.
+
+## URL STRUCTURE
+- Clean, hyphenated, keyword-rich URLs. No parameters, no trailing slashes, no uppercase.
+- Pattern: /[language]/[category]/[page-name]
+- Example: /en/services/freight-forwarding-turkey-italy
+- Maximum 3 levels deep from root.
+
+## FILE NAMING
+- All component files: kebab-case (hero-section.tsx, not HeroSection.tsx for files).
+- All SEO config files: kebab-case with descriptive names.
+- All image files: descriptive-kebab-case (freight-truck-istanbul.webp, not IMG_0123.webp).
