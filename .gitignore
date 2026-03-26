@@ -22,3 +22,4 @@ arya-core/
 *.command
 og-image.html
 generate-og.js
+*-original.mp4
