@@ -527,6 +527,12 @@ section{padding:60px 20px}
     position: relative;
     z-index: 10000;
     pointer-events: auto !important;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: rgba(255,255,255,0.1);
   }
   .navbar {
     pointer-events: auto !important;
@@ -1953,24 +1959,41 @@ if(window.innerWidth>768){
 })();
 </script>
 
-<!-- STEP 9: MOBILE HAMBURGER MENU -->
+<!-- STEP 9: MOBILE HAMBURGER MENU — BULLETPROOF -->
 <script>
 (function(){
   var ham = document.getElementById('nav-hamburger');
   var navLinks = document.querySelector('.nav-links');
   if (!ham || !navLinks) return;
   var ctaBtn = document.querySelector('.nav-cta-btn');
+  var isMobile = window.innerWidth <= 768;
+
+  /*
+   * ROOT CAUSE FIX: .nav-links has position:fixed but is inside .navbar which
+   * has transform:translateZ(0). Per CSS spec, a transform on an ancestor creates
+   * a containing block — position:fixed then behaves like position:absolute relative
+   * to that ancestor, NOT the viewport. This breaks the full-screen overlay.
+   *
+   * Fix: Move .nav-links to <body> on mobile so position:fixed works correctly.
+   */
+  if(isMobile){
+    document.body.appendChild(navLinks);
+    navLinks.style.zIndex = '99998'; // Above navbar(10001), below modals(99999)
+  }
+
+  // Debounce flag — prevents touchend + click double-toggle
+  var toggling = false;
 
   function closeMenu(){
     ham.classList.remove('active');
     navLinks.classList.remove('mobile-open');
     window.forceScroll();
-    setTimeout(window.forceScroll, 350);
+    setTimeout(window.forceScroll, 400);
     if(ctaBtn) ctaBtn.style.display = '';
   }
 
   function openMenu(){
-    // Force navbar to y:0 so overlay covers full viewport
+    // Ensure navbar is visible (GSAP may have hidden it on scroll-down)
     if(typeof gsap!=='undefined') gsap.set('.navbar',{y:0});
     ham.classList.add('active');
     navLinks.classList.add('mobile-open');
@@ -1979,6 +2002,9 @@ if(window.innerWidth>768){
   }
 
   function toggleMenu(e){
+    if(toggling) return;
+    toggling = true;
+    setTimeout(function(){ toggling = false; }, 500);
     if(e) e.stopPropagation();
     if(navLinks.classList.contains('mobile-open')){
       closeMenu();
@@ -1987,18 +2013,25 @@ if(window.innerWidth>768){
     }
   }
 
-  ham.addEventListener('click', toggleMenu);
-
-  // Instant response on mobile — no 300ms click delay
+  // Touch handler first — instant on mobile, prevents click via preventDefault
   ham.addEventListener('touchend', function(e){
     e.preventDefault();
     e.stopPropagation();
     toggleMenu();
   }, {passive: false});
 
+  // Click fallback for desktop and non-touch devices
+  ham.addEventListener('click', function(e){
+    e.stopPropagation();
+    toggleMenu();
+  });
+
+  // Close on Escape
   document.addEventListener('keydown', function(e){
     if(e.key==='Escape' && navLinks.classList.contains('mobile-open')) closeMenu();
   });
+
+  // Close on tap outside menu
   document.addEventListener('click', function(e){
     if(navLinks.classList.contains('mobile-open') && !navLinks.contains(e.target) && !ham.contains(e.target)) closeMenu();
   });
@@ -2014,14 +2047,11 @@ if(window.innerWidth>768){
       // Wait for menu close transition (400ms CSS) to fully complete
       setTimeout(function(){
         window.forceScroll();
-        // Use scrollIntoView — more reliable than manual scrollTo
         target.scrollIntoView({behavior:'smooth', block:'start'});
-        // Safety: ensure scroll is free after navigation
         setTimeout(window.forceScroll, 600);
       }, 450);
     }
     link.addEventListener('click', navTo);
-    // Instant response on mobile — bypass 300ms click delay
     link.addEventListener('touchend', function(e){
       e.preventDefault();
       e.stopImmediatePropagation();
