@@ -92,10 +92,6 @@ section[id],div[id]{scroll-margin-top:80px}
 /* HERO */
 .hero{position:relative;width:100%;height:100vh;height:100dvh;overflow:visible;background:var(--black);padding:0}
 .hero-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;will-change:opacity;-webkit-transform:translateZ(0);transform:translateZ(0)}
-/* HERO WORDMARK */
-.hero-wordmark{position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);z-index:2;text-align:center;pointer-events:none;opacity:0;display:flex;flex-direction:column;align-items:center;gap:8px}
-.hero-av{font-family:'Clash Display',sans-serif;font-weight:700;font-size:clamp(48px,8vw,120px);color:#ffffff;letter-spacing:0.12em;line-height:1;display:block}
-.hero-brand{font-family:'Clash Display',sans-serif;font-weight:500;font-size:clamp(12px,1.4vw,20px);color:rgba(255,255,255,0.5);letter-spacing:0.35em;text-transform:uppercase;display:block}
 .hero-content{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:0 var(--px) 10vh;pointer-events:none}
 h1.hero-tag,.hero-tag{font-family:var(--font-title);font-weight:700;font-size:clamp(19px,2.4vw,28px);letter-spacing:0.08em;text-transform:uppercase;color:#ffffff;margin-bottom:14px;margin-top:0}
 .hero-sub{font-family:var(--font-title);font-weight:500;font-size:clamp(15px,1.6vw,19px);color:rgba(255,255,255,0.5);margin-bottom:32px;max-width:520px}
@@ -151,7 +147,8 @@ html,body{overflow-y:auto!important;touch-action:pan-y!important}
 .presence-bg{position:absolute;inset:0;z-index:0;overflow:hidden;transform:scale(1.15);opacity:0;transition:transform 2s cubic-bezier(0.16,1,0.3,1),opacity 1.5s ease}
 .presence-bg.revealed{transform:scale(1);opacity:1}
 .presence-bg svg{width:100%;height:100%;display:block}
-.presence-overlay{position:absolute;inset:0;z-index:1;background:rgba(0,0,0,0.6)}
+.presence-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.35}
+.presence-overlay{position:absolute;inset:0;z-index:1;background:rgba(0,0,0,0.55)}
 .presence-line{position:absolute;top:50%;left:0;right:0;height:1px;z-index:2;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform 1.8s cubic-bezier(0.16,1,0.3,1) 0.3s;opacity:0.15}
 .presence-line.revealed{transform:scaleX(1)}
 .presence-content{position:relative;z-index:2;max-width:900px;width:100%;text-align:center}
@@ -164,6 +161,13 @@ html,body{overflow-y:auto!important;touch-action:pan-y!important}
 .presence-sub{font-family:'Satoshi',sans-serif;font-size:clamp(16px,1.8vw,20px);line-height:1.7;color:rgba(255,255,255,0.85);max-width:580px;margin:0 auto;opacity:0;transform:translateY(24px);transition:opacity 0.8s ease 0.5s,transform 0.8s ease 0.5s;text-shadow:0 2px 30px rgba(0,0,0,0.8)}
 .presence-sub .green{color:#c8ff00;font-weight:600}
 .presence-sub.visible{opacity:1;transform:translateY(0)}
+
+/* CODE STRIP — cropped hello-world video */
+.code-strip{position:relative;width:100%;height:clamp(80px,10vw,140px);overflow:hidden;background:#0a0a0a}
+.code-strip video{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100%;height:500%;object-fit:cover;object-position:center 42%;pointer-events:none}
+@media(max-width:768px){
+.code-strip{height:clamp(60px,14vw,100px)}
+}
 
 /* MARQUEE */
 .marquee{width:100%;padding:18px 0;overflow:hidden;background:#0a0a0a;border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border)}
@@ -316,9 +320,6 @@ img.logo:hover{opacity:0.7}
 }
 @media(max-width:768px){
 #hero-video-mobile{opacity:0.6}
-.hero-wordmark{transform:translate(-50%,-60%)}
-.hero-av{font-size:clamp(64px,18vw,96px)}
-.hero-brand{font-size:clamp(10px,3vw,14px);letter-spacing:0.3em}
 .hero{height:100dvh}
 .hero-video{object-fit:cover;object-position:center center}
 .hero-tag{font-size:15px;letter-spacing:0.06em}
@@ -696,12 +697,8 @@ section{padding:60px 20px}
 
 <!-- HERO -->
 <section class="hero" id="hero" aria-label="Hero">
-  <video id="hero-video-desktop" class="hero-video" autoplay muted loop playsinline preload="auto" style="display:none"><source src="hero-video/No-logo-hero.mp4" type="video/mp4"></video>
+  <video id="hero-video-desktop" class="hero-video" autoplay muted loop playsinline preload="auto" style="display:none"><source src="hero-video/AV-video.mp4" type="video/mp4"></video>
   <video id="hero-video-mobile" class="hero-video" autoplay muted loop playsinline preload="auto" style="display:none"><source src="hero-video/Mobile-hero.mp4" type="video/mp4"></video>
-  <div class="hero-wordmark">
-    <span class="hero-av">AV</span>
-    <span class="hero-brand">ARYAVENTURE</span>
-  </div>
   <div class="hero-content">
     <h1 class="hero-tag">Digital Web Agency</h1>
     <p class="hero-sub">Premium websites built for ambitious brands</p>
@@ -717,6 +714,10 @@ section{padding:60px 20px}
 
 <!-- PRESENCE SECTION -->
 <section id="presence">
+  <video class="presence-video" autoplay muted loop playsinline preload="none">
+    <source src="videos/Build-loop.mp4" type="video/mp4">
+  </video>
+  <div class="presence-overlay"></div>
   <div class="presence-content">
     <span class="presence-label">WHAT WE DO</span>
     <h2 class="presence-headline">
@@ -749,6 +750,13 @@ section{padding:60px 20px}
     <span>Brand Identity</span><div class="marquee-dot"></div>
     <span>Custom Code</span><div class="marquee-dot"></div>
   </div>
+</div>
+
+<!-- CODE STRIP -->
+<div class="code-strip">
+  <video autoplay muted loop playsinline preload="none">
+    <source src="videos/hello-world.mp4" type="video/mp4">
+  </video>
 </div>
 
 <main>
@@ -1136,7 +1144,7 @@ section{padding:60px 20px}
   for(var i=0;i<count;i++){
     var phi = Math.acos(2*Math.random()-1);
     var theta = 2*Math.PI*Math.random();
-    points.push({phi:phi, theta:theta, r:0.35});
+    points.push({phi:phi, theta:theta, r:0.9});
   }
   var rotY=0, rotX=0, active=false;
   function resize(){
@@ -1157,7 +1165,7 @@ section{padding:60px 20px}
     var w=canvas.width, h=canvas.height;
     ctx.clearRect(0,0,w,h);
     ctx.fillStyle = 'rgba(255,255,255,0.25)';
-    var cx=w/2, cy=h/2, scale=Math.min(w,h)*0.38;
+    var cx=w/2, cy=h/2, scale=Math.min(w,h)*0.45;
     for(var i=0;i<count;i++){
       var p=points[i];
       var x1=p.r*Math.sin(p.phi)*Math.cos(p.theta+rotY);
@@ -1167,7 +1175,7 @@ section{padding:60px 20px}
       var z2=y1*Math.sin(rotX)+z1*Math.cos(rotX);
       var sz=1/(1-z2*0.5);
       ctx.beginPath();
-      ctx.arc(cx+x1*scale*sz, cy+y2*scale*sz, sz*1.2, 0, 6.28);
+      ctx.arc(cx+x1*scale*sz, cy+y2*scale*sz, sz*1.5, 0, 6.28);
       ctx.fill();
     }
   }
@@ -1255,11 +1263,6 @@ section{padding:60px 20px}
       var targetOpacity = isMob ? 0.6 : 0.5;
       gsap.fromTo(heroVid, {opacity:0}, {opacity:targetOpacity, duration:isMob?1.2:2.5, ease:'power2.inOut', delay:0.1});
     }
-
-    // Hero wordmark entrance
-    gsap.to('.hero-wordmark', {opacity:1, y:0, duration:1.4, ease:'power3.out', delay:0.8});
-    gsap.from('.hero-av', {opacity:0, y:20, duration:1.2, ease:'power3.out', delay:0.8});
-    gsap.from('.hero-brand', {opacity:0, y:10, duration:1.0, ease:'power3.out', delay:1.2});
 
     // Scroll indicator fades in after delay
     gsap.fromTo('.hero-scroll', {opacity:0, y:10}, {opacity:1, y:0, duration:1.2, ease:'power3.out', delay:2.2});
