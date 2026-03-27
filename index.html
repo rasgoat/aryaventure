@@ -374,21 +374,35 @@ section{padding:60px 20px}
 }
 /* MOBILE TOUCH TARGETS + LAYOUT */
 @media(max-width:768px){
-  .nav-links a,.nav-cta-btn,.footer-col a,.pricing-cta,.hero-cta,.hero-demo-btn,.magnetic-btn,.cta-email,.ig-link,.option-pill,.modal-submit,.modal-close,.confirm-cta,#cookie-accept,#cookie-decline{min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center}
+  .footer-col a,.pricing-cta,.ig-link,.option-pill,.modal-submit,.modal-close,.confirm-cta,#cookie-accept,#cookie-decline{min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center}
   .footer-col a{min-height:44px;display:flex;align-items:center}
   .about-video-wrap{min-height:300px}
   .hero-content{padding:0 20px 8vh}
   .hero-scroll{bottom:12px}
   .scroll-line{height:18px}
-  .hero-buttons{flex-direction:row;gap:16px}
-  .hero-demo-btn{padding:13px 24px;font-size:12px;border-radius:4px}
-  .hero-cta{font-size:14px;padding:10px 0}
+  .hero-buttons{flex-direction:row;gap:16px;align-items:center}
+  .hero-demo-btn{padding:13px 24px;font-size:12px;border-radius:4px;min-height:auto;min-width:auto}
+  .hero-cta{font-size:14px;padding:10px 0;min-height:auto;min-width:auto}
+  .nav-cta-btn{min-height:auto;min-width:auto}
   .cta-section{min-height:80vh;padding:60px 20px}
   .cta-title{margin-bottom:16px}
   .cta-sub{font-size:15px;margin-bottom:32px}
   .cta-email{font-size:14px;margin-bottom:32px}
   .magnetic-btn{padding:16px 40px;font-size:14px}
   .cta-locations{margin-top:48px;font-size:12px}
+  /* Kill blank gaps — tighten section spacing */
+  .work-header{padding:40px 20px 24px}
+  .case-study{padding:32px 20px}
+  .case-study-video{margin-bottom:24px}
+  /* Video performance — disable GPU compositing on mobile */
+  .about-video-wrap video,
+  .case-study-video video,
+  .presence-video{
+    will-change:auto!important;
+    -webkit-transform:none!important;
+    transform:none!important;
+    backface-visibility:hidden;
+  }
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}.marquee-track{animation:none}}
 
@@ -436,6 +450,12 @@ section{padding:60px 20px}
   .services,
   .code-strip,
   .marquee {
+    overflow: visible !important;
+    touch-action: pan-y !important;
+  }
+  .about-video-wrap,
+  .about-grid,
+  #about {
     overflow: visible !important;
     touch-action: pan-y !important;
   }
