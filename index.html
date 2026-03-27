@@ -104,9 +104,8 @@ h1.hero-tag,.hero-tag{font-family:var(--font-title);font-weight:700;font-size:cl
 .hero-cta:hover .arrow{transform:translateY(4px)}
 .hero-demo-btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 28px;background:var(--accent);color:var(--black);border-radius:4px;font-family:var(--font-title);font-weight:600;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;transition:transform 0.4s var(--ease-out),box-shadow 0.4s ease;white-space:nowrap}
 .hero-demo-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(200,255,0,0.2)}
-.hero-scroll{display:none}
-.hero-scroll span{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.5)}
-.scroll-line{width:1px;height:40px;background:rgba(255,255,255,0.35);position:relative;overflow:hidden}
+.hero-scroll{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;opacity:0}
+.scroll-line{width:1px;height:32px;background:rgba(255,255,255,0.2);position:relative;overflow:hidden;border-radius:1px}
 .scroll-line::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--accent);animation:scrollPulse 2s ease-in-out infinite}
 @keyframes scrollPulse{0%{top:-100%}50%{top:0}100%{top:100%}}
 
@@ -405,8 +404,8 @@ section{padding:60px 20px}
   .nav-links a,.nav-cta-btn,.footer-col a,.pricing-cta,.hero-cta,.hero-demo-btn,.magnetic-btn,.cta-email,.ig-link,.option-pill,.modal-submit,.modal-close,.confirm-cta,#cookie-accept,#cookie-decline{min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center}
   .footer-col a{min-height:44px;display:flex;align-items:center}
   .about-video-wrap{min-height:300px}
-  .hero-content{padding:0 20px 6vh}
-  .hero-scroll{display:none}
+  .hero-content{padding:0 20px 8vh}
+  .hero-scroll{bottom:16px}
   .hero-buttons{flex-direction:row;gap:16px}
   .hero-demo-btn{padding:13px 24px;font-size:12px;border-radius:4px}
   .hero-cta{font-size:14px;padding:10px 0}
