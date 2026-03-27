@@ -23,7 +23,7 @@
 {"@context":"https://schema.org","@type":"Organization","name":"Arya Venture","url":"https://aryaventure.com","email":"hello@aryaventure.com","description":"Premium digital agency building custom websites with search optimization.","foundingDate":"2025","knowsAbout":["web design","SEO","search optimization","GSAP animations","startup builds"],"address":[{"@type":"PostalAddress","addressLocality":"Milan","addressCountry":"IT"},{"@type":"PostalAddress","addressLocality":"Istanbul","addressCountry":"TR"}]}
 </script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does Arya Venture do?","acceptedAnswer":{"@type":"Answer","text":"Arya Venture builds premium custom websites with SEO and AI-search optimization, content studios, and full startup digital builds."}},{"@type":"Question","name":"Where is Arya Venture located?","acceptedAnswer":{"@type":"Answer","text":"Arya Venture operates from Milan, Italy and Istanbul, Turkey."}},{"@type":"Question","name":"How long does a website take?","acceptedAnswer":{"@type":"Answer","text":"Tier 1 premium websites are delivered in 7-14 days. Full startup builds launch in 30 days."}},{"@type":"Question","name":"Does Arya Venture optimize for AI search?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every site includes FAQPage schema, llms.txt, speakable markup, and structured data for both Google and AI search engines."}},{"@type":"Question","name":"What technology stack does Arya Venture use?","acceptedAnswer":{"@type":"Answer","text":"Custom HTML/CSS/JS, GSAP animations, Three.js 3D. No templates, no page builders."}},{"@type":"Question","name":"Does Arya Venture work with startups?","acceptedAnswer":{"@type":"Answer","text":"Yes. Tier 3 provides end-to-end digital infrastructure: web presence, brand identity, content system, and growth strategy."}}]}
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does Arya Venture do?","acceptedAnswer":{"@type":"Answer","text":"Arya Venture builds premium custom websites with SEO and AI-search optimization, content studios, and full startup digital builds."}},{"@type":"Question","name":"Where is Arya Venture located?","acceptedAnswer":{"@type":"Answer","text":"Arya Venture operates from Milan, Italy and Istanbul, Turkey."}},{"@type":"Question","name":"How long does a website take?","acceptedAnswer":{"@type":"Answer","text":"Tier 1 premium websites are delivered in 7-14 days. Full startup builds launch in 30 days."}},{"@type":"Question","name":"Does Arya Venture optimize for AI search?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every site includes FAQPage schema, llms.txt, speakable markup, and structured data for both Google and AI search engines."}},{"@type":"Question","name":"What technology stack does Arya Venture use?","acceptedAnswer":{"@type":"Answer","text":"Custom HTML/CSS/JS, GSAP animations. No templates, no page builders."}},{"@type":"Question","name":"Does Arya Venture work with startups?","acceptedAnswer":{"@type":"Answer","text":"Yes. Tier 3 provides end-to-end digital infrastructure: web presence, brand identity, content system, and growth strategy."}}]}
 </script>
 
 <link rel="icon" type="image/png" href="logos/No%20Background%20Logos/AV.png">
@@ -91,11 +91,14 @@ section[id],div[id]{scroll-margin-top:80px}
 .nav-hamburger{display:none}
 
 /* HERO */
-.hero{position:relative;width:100%;height:100vh;height:100svh;height:100dvh;overflow:visible;background:var(--black);padding:0}
-.hero-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;-webkit-transform:translateZ(0);transform:translateZ(0)}
+.hero{position:relative;width:100%;height:100dvh;min-height:100dvh;overflow:visible;background:var(--black);padding:0;touch-action:pan-y!important}
+@supports not (height: 100dvh) {
+  .hero { height: 100vh; min-height: 100vh; }
+}
+.hero-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;-webkit-transform:translateZ(0);transform:translateZ(0);pointer-events:none!important;touch-action:none!important}
 @media(min-width:769px){#hero-video-mobile{display:none}#hero-video-desktop{opacity:0.5}}
 @media(max-width:768px){#hero-video-desktop{display:none}#hero-video-mobile{opacity:0.6}}
-.hero-content{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:0 var(--px) 5vh;pointer-events:none;display:flex;flex-direction:column;align-items:center;text-align:center}
+.hero-content{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:0 var(--px) 5vh;pointer-events:auto!important;touch-action:auto!important;display:flex;flex-direction:column;align-items:center;text-align:center}
 h1.hero-tag,.hero-tag{font-family:var(--font-title);font-weight:700;font-size:clamp(19px,2.4vw,28px);letter-spacing:0.08em;text-transform:uppercase;color:#ffffff;margin-bottom:8px;margin-top:0}
 .hero-sub{font-family:var(--font-title);font-weight:500;font-size:clamp(15px,1.6vw,19px);color:rgba(255,255,255,0.5);margin-bottom:24px;max-width:520px}
 .hero-buttons{display:flex;align-items:center;gap:20px;flex-wrap:wrap;pointer-events:auto;justify-content:center}
@@ -105,44 +108,13 @@ h1.hero-tag,.hero-tag{font-family:var(--font-title);font-weight:700;font-size:cl
 .hero-cta:hover .arrow{transform:translateY(4px)}
 .hero-demo-btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 28px;background:var(--accent);color:var(--black);border-radius:4px;font-family:var(--font-title);font-weight:600;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;transition:transform 0.4s var(--ease-out),box-shadow 0.4s ease;white-space:nowrap}
 .hero-demo-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(200,255,0,0.2)}
-.hero-scroll{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;pointer-events:none;opacity:0}
+.hero-scroll{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;pointer-events:none;opacity:0;margin-top:32px}
 .scroll-line{width:1px;height:20px;background:rgba(255,255,255,0.15);position:relative;overflow:hidden;border-radius:1px}
 .scroll-line::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--accent);animation:scrollPulse 2s ease-in-out infinite}
 @keyframes scrollPulse{0%{top:-100%}50%{top:0}100%{top:100%}}
 
 /* HERO-TO-SECTION GRADIENT FADE */
 .hero-fade{height:80px;background:linear-gradient(to bottom,rgba(0,0,0,0.6),transparent);position:relative;z-index:1;margin-top:-80px;pointer-events:none}
-/* ═══ SCROLL — NATIVE ALWAYS WINS ═══ */
-html,body{overflow-y:auto!important;touch-action:pan-y!important}
-
-/* Hero: scroll passes through, children are ghosts */
-.hero{touch-action:pan-y!important;overflow:visible!important;pointer-events:auto!important}
-#hero-video-desktop,
-#hero-video-mobile,
-.hero-video,
-.hero-scroll,
-.hero-fade,
-.hero::before,
-.hero::after{pointer-events:none!important;touch-action:none!important}
-.hero-content{pointer-events:auto!important;touch-action:auto!important}
-
-/* All sections: never trap scroll */
-#services,.services,
-#work,.work,
-#about,.about,
-#contact,.cta-section,
-.stats,.shapes-grid-section,
-.av-video-section,#presence,
-.marquee,.pricing-grid,
-.case-study,.case-study-video{
-  overflow-x:hidden;
-  overflow-y:visible;
-  touch-action:pan-y;
-}
-
-@media(max-width:768px){
-  .hero-video{-webkit-transform:none!important;transform:none!important;will-change:auto!important}
-}
 
 /* PRESENCE */
 #presence{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:clip;padding:120px var(--px);touch-action:pan-y}
@@ -150,9 +122,7 @@ html,body{overflow-y:auto!important;touch-action:pan-y!important}
 .presence-bg.revealed{transform:scale(1);opacity:1}
 .presence-bg svg{width:100%;height:100%;display:block}
 .presence-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.35;pointer-events:none;touch-action:none;display:none}
-#presence-3d{position:absolute;inset:0;z-index:0}
-#presence-3d canvas{width:100%!important;height:100%!important;display:block}
-@media(max-width:768px){.presence-video{display:block}#presence-3d{display:none}}
+@media(max-width:768px){.presence-video{display:block}}
 .presence-overlay{position:absolute;inset:0;z-index:1;background:rgba(0,0,0,0.55)}
 .presence-line{position:absolute;top:50%;left:0;right:0;height:1px;z-index:2;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform 1.8s cubic-bezier(0.16,1,0.3,1) 0.3s;opacity:0.15}
 .presence-line.revealed{transform:scaleX(1)}
@@ -167,7 +137,7 @@ html,body{overflow-y:auto!important;touch-action:pan-y!important}
 .presence-sub .green{color:#c8ff00;font-weight:600}
 .presence-sub.visible{opacity:1;transform:translateY(0)}
 
-/* CODE STRIP — cropped hello-world video */
+/* CODE STRIP */
 .code-strip{position:relative;width:100%;height:clamp(160px,18vw,280px);overflow:hidden;background:#000000;touch-action:pan-y;margin-top:40px}
 .code-strip video{position:absolute;left:50%;top:50%;transform:translate(-50%,-45%);height:auto;width:clamp(600px,55vw,1000px);pointer-events:none;border-radius:12px}
 @media(max-width:768px){
@@ -229,7 +199,7 @@ section{padding:120px var(--px)}
 .process-line{position:absolute;top:28px;left:0;right:0;height:1px;background:rgba(255,255,255,0.06);z-index:0}
 .process-line-fill{height:100%;width:0;background:var(--accent);opacity:0.3;transition:width 1.5s var(--ease-out)}
 .process-line-fill.drawn{width:100%}
-/* WORK — full-width case studies */
+/* WORK */
 .work{padding:0;overflow-x:clip;overflow-y:visible;touch-action:pan-y}
 .work-header{padding:120px var(--px) 60px}
 .case-study{border-top:1px solid var(--glass-border);padding:80px var(--px)}
@@ -388,7 +358,7 @@ section{padding:60px 20px}
   video{-webkit-transform:translateZ(0);transform:translateZ(0);will-change:auto}
   .case-study-video{border-radius:12px}
   .about-video-wrap{border-radius:12px}
-  .hero-video{object-position:center center}
+  .hero-video{object-position:center center;-webkit-transform:none!important;transform:none!important;will-change:auto!important}
   /* Shapes grid mobile fixes */
   .shapes-logos-inner{gap:24px!important}
   .shapes-logo-divider{display:none!important}
@@ -399,7 +369,6 @@ section{padding:60px 20px}
   .nav-hamburger.active span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
   .nav-hamburger.active span:nth-child(2){opacity:0}
   .nav-hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
-  /* nav-links mobile-open now handled by FIX 5 transition CSS above */
 }
 /* MOBILE TOUCH TARGETS + LAYOUT */
 @media(max-width:768px){
@@ -421,7 +390,7 @@ section{padding:60px 20px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}.marquee-track{animation:none}}
 
-/* FIX 1 — Make Me Joi + case study mobile scroll */
+/* Mobile scroll freedom — case studies */
 @media (max-width: 768px) {
   .case-study,
   .case-study-video,
@@ -438,7 +407,7 @@ section{padding:60px 20px}
   }
 }
 
-/* FIX 2 — Global mobile scroll — single source of truth */
+/* Global mobile scroll */
 @media (max-width: 768px) {
   html {
     overflow-x: hidden !important;
@@ -478,7 +447,7 @@ section{padding:60px 20px}
   }
 }
 
-/* FIX 5 — Mobile nav full-screen overlay + stagger */
+/* Mobile nav full-screen overlay + stagger */
 @media (max-width: 768px) {
   .nav-links {
     display: flex !important;
@@ -526,14 +495,13 @@ section{padding:60px 20px}
   .nav-links.mobile-open li:nth-child(2){ opacity:1; transform:translateY(0); transition-delay:0.10s; }
   .nav-links.mobile-open li:nth-child(3){ opacity:1; transform:translateY(0); transition-delay:0.15s; }
   .nav-links.mobile-open li:nth-child(4){ opacity:1; transform:translateY(0); transition-delay:0.20s; }
-  /* Close X button positioning */
   .nav-hamburger {
     position: relative;
     z-index: 10000;
   }
 }
 
-/* FIX 3 — Hero video position on mobile (9:16 video) */
+/* Hero video position on mobile */
 @media (max-width: 768px) {
   #hero-video-mobile {
     object-fit: cover;
@@ -544,7 +512,7 @@ section{padding:60px 20px}
   }
 }
 
-/* FIX 4 — Hero text left clip on mobile */
+/* Hero text left clip on mobile */
 @media (max-width: 768px) {
   .hero-content {
     left: 0 !important;
@@ -563,13 +531,66 @@ section{padding:60px 20px}
   }
 }
 
-/* FIX — Typing / overflow on mobile */
+/* Typing / overflow on mobile */
 @media (max-width: 768px) {
   .typewriter, .typer, [class*="type"] {
     overflow: hidden;
     width: 100%;
     max-width: 100vw;
   }
+}
+
+/* STEP 10 — Scroll CSS: all sections never trap scroll */
+html, body {
+  overflow-x: hidden;
+  overflow-y: auto !important;
+}
+
+.hero,
+#services, .services,
+#work, .work,
+#about, .about,
+#contact, .cta-section,
+.stats, #presence,
+.marquee, .av-video-section,
+.shapes-grid-section,
+.case-study, .case-study-video,
+.pricing-grid {
+  overflow-x: hidden;
+  overflow-y: visible;
+  touch-action: pan-y;
+}
+
+#hero-video-desktop,
+#hero-video-mobile,
+.hero-video {
+  pointer-events: none !important;
+  touch-action: none !important;
+}
+
+.hero-content {
+  pointer-events: auto !important;
+  touch-action: auto !important;
+}
+
+video {
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+nav, header {
+  transform: translateZ(0);
+  will-change: transform;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+
+section[id], [id] {
+  scroll-margin-top: 80px;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* CONTACT MODAL */
@@ -661,97 +682,97 @@ section{padding:60px 20px}
 </head>
 <body>
 <script>
-(function(){
-  /* ═══ ULTIMATE UNLOCKER — centralized scroll control ═══ */
-  var revealed = sessionStorage.getItem('arya_hero_revealed') === 'true';
-
-  // Core unlock function — the ONLY way to free scroll
-  function unlockPage(){
-    document.body.style.overflow = '';
-    document.body.style.overflowY = 'auto';
-    document.documentElement.style.overflow = '';
-    document.documentElement.style.overflowY = 'auto';
-    document.body.style.touchAction = 'pan-y';
-    document.documentElement.style.touchAction = 'pan-y';
-    document.body.style.height = '';
-    document.documentElement.style.height = '';
+/* ─── STEP 1: GLOBAL SCROLL UNLOCK — call this after ANY overlay closes ─── */
+window.forceScroll = function() {
+  document.body.style.overflow     = '';
+  document.body.style.overflowY    = '';
+  document.body.style.position     = '';
+  document.body.style.top          = '';
+  document.body.style.width        = '';
+  document.documentElement.style.overflow  = '';
+  document.documentElement.style.overflowY = '';
+  document.documentElement.style.position  = '';
+  if (window._touchBlocker) {
+    document.removeEventListener('touchmove', window._touchBlocker, false);
   }
-
-  // Check if any overlay is legitimately locking scroll
-  function isOverlayOpen(){
-    return document.querySelector('.modal-overlay.is-open') ||
-           document.querySelector('.nav-links.mobile-open') ||
-           document.querySelector('.confirm-overlay.is-open');
-  }
-
-  // Safe unlock — respects open overlays
-  function safeUnlock(){
-    if(!isOverlayOpen()) unlockPage();
-  }
-
-  // Mark hero as revealed (skip intro on refresh/return)
-  function markRevealed(){
-    if(revealed) return;
-    revealed = true;
-    sessionStorage.setItem('arya_hero_revealed', 'true');
-    unlockPage();
-    // Force preloader away
-    var p = document.getElementById('preloader');
-    if(p && p.style.display !== 'none'){
-      p.style.transition = 'opacity 0.3s ease';
-      p.style.opacity = '0';
-      p.style.pointerEvents = 'none';
-      setTimeout(function(){ p.style.display = 'none'; }, 300);
-    }
-  }
-
-  // Expose globally
-  window.forceScroll = safeUnlock;
-  window.unlockPage = unlockPage;
-  window.markRevealed = markRevealed;
-
-  // If already revealed (session), skip everything immediately
-  if(revealed){
-    unlockPage();
-  } else {
-    // First visit: unlock on any user scroll intent within first 5s
-    var intentEvents = ['wheel','touchmove','keydown'];
-    function onUserIntent(){
-      markRevealed();
-      intentEvents.forEach(function(evt){
-        window.removeEventListener(evt, onUserIntent);
-      });
-    }
-    intentEvents.forEach(function(evt){
-      window.addEventListener(evt, onUserIntent, {passive:true, once:false});
-    });
-    // Safety: always mark revealed after 5s
-    setTimeout(markRevealed, 5000);
-  }
-
-  // Nav link clicks always unlock
-  document.addEventListener('DOMContentLoaded', function(){
-    document.querySelectorAll('.nav-links a, .nav-cta-btn').forEach(function(a){
-      a.addEventListener('click', markRevealed);
-    });
-  });
-
-  // Scheduled unlocks (belt + suspenders)
-  unlockPage();
-  document.addEventListener('DOMContentLoaded', safeUnlock);
-  window.addEventListener('load', safeUnlock);
-  setTimeout(safeUnlock, 300);
-  setTimeout(safeUnlock, 1000);
-
-  // Mobile: touchstart recovery + periodic check
-  if(window.innerWidth <= 768){
-    document.addEventListener('touchstart', safeUnlock, {passive:true});
-    setInterval(safeUnlock, 2000);
-  }
-})();
+};
+window._touchBlocker = null;
 </script>
 
-<!-- Video system handled by unified script before </body> -->
+<script>
+/* ─── STEP 6: HERO SCROLL GATE (MOBILE ONLY — BYPASSABLE) ─── */
+(function() {
+  if (window.innerWidth > 768) return;
+  if (sessionStorage.getItem('arya_hero_seen') === 'true') return;
+
+  var heroVideo = document.getElementById('hero-video-mobile') ||
+                  document.querySelector('.hero-video-mobile') ||
+                  document.querySelector('.hero video');
+  if (!heroVideo) return;
+
+  var scrollY = window.scrollY || 0;
+  document.body.style.position = 'fixed';
+  document.body.style.top      = '-' + scrollY + 'px';
+  document.body.style.width    = '100%';
+  document.body.style.overflow = 'hidden';
+
+  var unlocked = false;
+
+  function unlockPage() {
+    if (unlocked) return;
+    unlocked = true;
+
+    var storedY = Math.abs(parseInt(document.body.style.top || '0'));
+    document.body.style.position = '';
+    document.body.style.top      = '';
+    document.body.style.width    = '';
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+    window.scrollTo(0, storedY);
+
+    if (window._touchBlocker) {
+      document.removeEventListener('touchmove', window._touchBlocker, false);
+    }
+
+    sessionStorage.setItem('arya_hero_seen', 'true');
+  }
+
+  window._touchBlocker = function(e) { e.preventDefault(); };
+  document.addEventListener('touchmove', window._touchBlocker, { passive: false });
+
+  // 1. Video ends naturally
+  heroVideo.addEventListener('ended', unlockPage, { once: true });
+
+  // 2. Desktop wheel (safety)
+  window.addEventListener('wheel', unlockPage, { once: true, passive: true });
+
+  // 3. Intentional downward swipe unlocks immediately
+  var touchStartY = 0;
+  document.addEventListener('touchstart', function(e) {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', function(e) {
+    if (touchStartY - e.changedTouches[0].clientY > 40) {
+      unlockPage();
+    }
+  }, { passive: true });
+
+  // 4. Nav link tap while locked
+  document.querySelectorAll('nav a, .mobile-menu a, .nav-links a').forEach(function(l) {
+    l.addEventListener('click', unlockPage);
+  });
+
+  // 5. Hard safety fallback: 8 seconds max
+  setTimeout(unlockPage, 8000);
+
+  // 6. Video stall: if video hasn't started within 3s, unlock
+  setTimeout(function() {
+    if (!unlocked && heroVideo.readyState < 2) unlockPage();
+  }, 3000);
+
+  heroVideo.addEventListener('error', unlockPage, { once: true });
+})();
+</script>
 
 <!-- PRELOADER -->
 <div id="preloader">
@@ -778,8 +799,8 @@ section{padding:60px 20px}
 
 <!-- HERO -->
 <section class="hero" id="hero" aria-label="Hero">
-  <video id="hero-video-desktop" class="hero-video" autoplay muted loop playsinline preload="auto"><source src="hero-video/AV-video.mp4" type="video/mp4"></video>
-  <video id="hero-video-mobile" class="hero-video" autoplay muted loop playsinline preload="auto"><source src="hero-video/Mobile-hero.mp4" type="video/mp4"></video>
+  <video id="hero-video-desktop" class="hero-video" autoplay muted loop playsinline preload="metadata"><source src="hero-video/AV-video.mp4" type="video/mp4"></video>
+  <video id="hero-video-mobile" class="hero-video" autoplay muted loop playsinline preload="metadata"><source src="hero-video/Mobile-hero.mp4" type="video/mp4"></video>
   <script>
   (function(){var m=window.innerWidth<=768;
     document.getElementById('hero-video-desktop').style.display=m?'none':'block';
@@ -803,8 +824,7 @@ section{padding:60px 20px}
 
 <!-- PRESENCE SECTION -->
 <section id="presence">
-  <div id="presence-3d"></div>
-  <video class="presence-video" autoplay muted loop playsinline preload="none">
+  <video class="presence-video" autoplay muted loop playsinline preload="metadata">
     <source src="videos/Build-loop.mp4" type="video/mp4">
   </video>
   <div class="presence-overlay"></div>
@@ -844,7 +864,7 @@ section{padding:60px 20px}
 
 <!-- CODE STRIP -->
 <div class="code-strip">
-  <video autoplay muted loop playsinline preload="none">
+  <video autoplay muted loop playsinline preload="metadata">
     <source src="videos/v2-hello-world.mp4" type="video/mp4">
   </video>
 </div>
@@ -978,7 +998,7 @@ section{padding:60px 20px}
   <!-- CASE STUDY 1: EGE EKSPRES -->
   <article class="case-study">
     <div class="case-study-video">
-      <video class="client-video" src="clients/AA-EgeEkspres.mp4" autoplay muted loop playsinline preload="none"></video>
+      <video class="client-video" src="clients/EGEEKSPRES-client-compressed.mp4" autoplay muted loop playsinline preload="metadata"></video>
       <span class="year-badge">2025 · Live</span>
     </div>
     <div class="case-study-meta">
@@ -1008,7 +1028,7 @@ section{padding:60px 20px}
   <!-- CASE STUDY 2: FLORA ET LABORA -->
   <article class="case-study">
     <div class="case-study-video">
-      <video class="client-video" src="clients/AA-Flora.mp4" autoplay muted loop playsinline preload="none"></video>
+      <video class="client-video" src="clients/Flora-client-compressed.mp4" autoplay muted loop playsinline preload="metadata"></video>
       <span class="year-badge">2025 · Live</span>
     </div>
     <div class="case-study-meta">
@@ -1038,7 +1058,7 @@ section{padding:60px 20px}
   <!-- CASE STUDY 3: MAKE ME JOI -->
   <article class="case-study">
     <div class="case-study-video">
-      <video class="client-video" src="clients/Joi.mp4" autoplay muted loop playsinline preload="none"></video>
+      <video class="client-video" src="clients/Joi-client-compressed.mp4" autoplay muted loop playsinline preload="metadata"></video>
       <span class="year-badge">2025 · Live</span>
     </div>
     <div class="case-study-meta">
@@ -1080,7 +1100,7 @@ section{padding:60px 20px}
       </div>
     </div>
     <div class="about-video-wrap">
-      <video autoplay muted loop playsinline preload="none" class="about-video">
+      <video autoplay muted loop playsinline preload="metadata" class="about-video">
         <source src="videos/video-loop-founder-section.mp4" type="video/mp4">
       </video>
     </div>
@@ -1197,40 +1217,31 @@ section{padding:60px 20px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Observer.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
-<!-- PRELOADER -->
+<!-- STEP 7: PRELOADER -->
 <script>
 (function(){
   var bar = document.getElementById('preloader-bar');
   var preloader = document.getElementById('preloader');
-  var alreadyRevealed = sessionStorage.getItem('arya_hero_revealed') === 'true';
-
-  // If already revealed, kill preloader instantly
-  if(alreadyRevealed && preloader){
-    preloader.style.display = 'none';
-    if(window.markRevealed) window.markRevealed();
-    return;
-  }
 
   if(bar) bar.style.transform='scaleX(1)';
 
-  var hideLoader = function(){
+  var hidePreloader = function(){
     if(!preloader) return;
     preloader.style.transition = 'opacity 0.6s ease';
     preloader.style.opacity = '0';
     preloader.style.pointerEvents = 'none';
     setTimeout(function(){
       preloader.style.display = 'none';
-      if(window.markRevealed) window.markRevealed();
-      else if(window.forceScroll) window.forceScroll();
+      window.forceScroll();
     }, 600);
   };
 
-  window.addEventListener('load', hideLoader);
-  setTimeout(hideLoader, 2000);
+  window.addEventListener('load', hidePreloader);
+  setTimeout(hidePreloader, 2000);
 })();
 </script>
 
-<!-- CTA PARTICLE SPHERE (Canvas2D — no Three.js) -->
+<!-- CTA PARTICLE SPHERE (Canvas2D) -->
 <script>
 (function(){
   var container = document.getElementById('cta-particles');
@@ -1292,7 +1303,6 @@ section{padding:60px 20px}
   const isMob=window.innerWidth<=768;
   var lenis=null;
 
-  // Only use Lenis on desktop — mobile gets native scroll (no jank)
   if(!isMob){
     lenis=new Lenis({lerp:0.09,smoothWheel:true,wheelMultiplier:1.0,duration:1.0});
     lenis.on('scroll',ScrollTrigger.update);
@@ -1310,19 +1320,18 @@ section{padding:60px 20px}
       e.preventDefault();
       if(lenis){lenis.scrollTo(target,{offset:0,duration:1.2});}
       else{target.scrollIntoView({behavior:'smooth',block:'start'});}
+      setTimeout(function(){ if(window.forceScroll) window.forceScroll(); }, 500);
     });
   });
 
   function init(){
 
-    // ScrollTrigger: native scroll priority
+    // STEP 8: ScrollTrigger config
     ScrollTrigger.normalizeScroll(false);
     ScrollTrigger.config({
       ignoreMobileResize:true,
-      limitCallbacks:true,
       autoRefreshEvents:'visibilitychange,DOMContentLoaded,load'
     });
-    if(isMob && window.forceScroll) window.forceScroll();
 
     // NAVBAR
     gsap.to('.navbar',{y:0,duration:1,ease:'power4.out',delay:0.4});
@@ -1332,7 +1341,6 @@ section{padding:60px 20px}
         onDown:()=>{if(window.scrollY>400)gsap.to('.navbar',{y:-80,duration:0.5,ease:'power3.inOut'})}
       });
     } else {
-      // Lightweight scroll listener for mobile navbar hide/show
       let lastY=0;
       window.addEventListener('scroll',function(){
         var y=window.scrollY;
@@ -1353,13 +1361,12 @@ section{padding:60px 20px}
       el.innerHTML=result;
     });
 
-    // Hero video — find the VISIBLE one (desktop or mobile) and fade it in
+    // Hero video
     var heroVid = document.getElementById(isMob ? 'hero-video-mobile' : 'hero-video-desktop');
     if (heroVid) {
       heroVid.loop = true;
       heroVid.muted = true;
       heroVid.playsInline = true;
-      heroVid.preload = 'auto';
       heroVid.load();
       heroVid.play().catch(function(){});
     }
@@ -1367,14 +1374,14 @@ section{padding:60px 20px}
     // Scroll indicator fades in after delay
     gsap.fromTo('.hero-scroll', {opacity:0, y:10}, {opacity:1, y:0, duration:1.2, ease:'power3.out', delay:2.2});
 
-    // SECTION REVEALS — smooth and premium
+    // SECTION REVEALS
     gsap.utils.toArray('section:not(.hero):not(.cta-section),.marquee,footer').forEach(el=>{
       gsap.from(el,{opacity:0,y:30,duration:1.0,ease:'power3.out',
         scrollTrigger:{trigger:el,start:'top 95%',toggleActions:'play none none none'}
       });
     });
 
-    // SPLIT REVEAL ON SCROLL (section titles + CTA title)
+    // SPLIT REVEAL ON SCROLL
     document.querySelectorAll('.section-title.split-reveal,.cta-title.split-reveal').forEach(el=>{
       const chars=el.querySelectorAll('.char');if(!chars.length)return;
       gsap.from(chars,{opacity:0,y:20,stagger:0.015,duration:0.5,ease:'power3.out',
@@ -1396,17 +1403,17 @@ section{padding:60px 20px}
       });
     });
 
-    // PRICING CARDS — staggered reveal
+    // PRICING CARDS
     document.querySelectorAll('.pricing-card').forEach((card,i)=>{
       gsap.from(card,{opacity:0,y:40,scale:0.95,duration:0.7,ease:'power3.out',delay:i*0.1,
         scrollTrigger:{trigger:'.pricing-grid',start:'top 80%',toggleActions:'play none none none'}});
     });
 
-    // CTA LOGO animation
+    // CTA LOGO
     var ctaLogo=document.querySelector('.cta-logo');
     if(ctaLogo){gsap.from(ctaLogo,{opacity:0,y:-10,duration:0.6,ease:'power2.out',scrollTrigger:{trigger:ctaLogo,start:'top 85%',toggleActions:'play none none none'}});}
 
-    // CASE STUDIES — staggered reveal per study
+    // CASE STUDIES
     document.querySelectorAll('.case-study').forEach(cs=>{
       const video = cs.querySelector('.case-study-video');
       const title = cs.querySelector('.case-study-title');
@@ -1415,11 +1422,9 @@ section{padding:60px 20px}
       const features = cs.querySelectorAll('.case-feature');
       const results = cs.querySelectorAll('.case-result');
 
-      // Video panel — simple fade in (no clip-path that hides video)
       if(video) gsap.from(video,{opacity:0,y:20,duration:1.0,ease:'power3.out',
         scrollTrigger:{trigger:cs,start:'top 90%',toggleActions:'play none none none'}});
 
-      // Text stagger
       if(tag) gsap.from(tag,{opacity:0,x:-20,duration:0.5,ease:'power3.out',
         scrollTrigger:{trigger:cs,start:'top 65%',toggleActions:'play none none none'}});
       if(title) gsap.from(title,{opacity:0,y:30,duration:0.7,ease:'power3.out',delay:0.1,
@@ -1427,13 +1432,11 @@ section{padding:60px 20px}
       if(desc) gsap.from(desc,{opacity:0,y:20,duration:0.7,ease:'power3.out',delay:0.2,
         scrollTrigger:{trigger:cs,start:'top 65%',toggleActions:'play none none none'}});
 
-      // Features stagger in
       features.forEach((f,i)=>{
         gsap.from(f,{opacity:0,x:20,duration:0.5,ease:'power3.out',delay:0.3+i*0.08,
           scrollTrigger:{trigger:cs,start:'top 60%',toggleActions:'play none none none'}});
       });
 
-      // Results count up
       results.forEach((r,i)=>{
         const numEl = r.querySelector('.case-result-num');
         if(!numEl) return;
@@ -1452,10 +1455,7 @@ section{padding:60px 20px}
       });
     });
 
-    // Video management moved to unified script before </body>
-
-    // ABOUT PARALLAX
-    // About video reveal
+    // ABOUT VIDEO REVEAL
     gsap.from('.about-video-wrap',{opacity:0,scale:0.94,y:30,duration:1.5,ease:'power4.out',scrollTrigger:{trigger:'#about',start:'top 80%',toggleActions:'play none none none'}});
 
     // STATS COUNT-UP + UNDERLINE DRAW
@@ -1487,8 +1487,6 @@ section{padding:60px 20px}
       });
     });
 
-    // CTA MAGNETIC BUTTON — handled by standalone script below
-
     // FOOTER STAGGER
     gsap.utils.toArray('.footer-grid > div').forEach((col,i)=>{
       gsap.from(col,{opacity:0,y:30,duration:0.6,ease:'power3.out',delay:i*0.1,
@@ -1496,7 +1494,9 @@ section{padding:60px 20px}
       });
     });
 
-
+    // STEP 8: ScrollTrigger refresh + forceScroll on load
+    ScrollTrigger.refresh();
+    window.forceScroll();
   }
 
   var inited=false;
@@ -1505,6 +1505,8 @@ section{padding:60px 20px}
   else document.addEventListener('DOMContentLoaded',tryInit);
 })();
 </script>
+
+<!-- PRESENCE SECTION ANIMATIONS -->
 <script>
 (function(){
   const presence = document.getElementById('presence');
@@ -1518,7 +1520,6 @@ section{padding:60px 20px}
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
-      // Background zooms in + line draws
       if (bg) bg.classList.add('revealed');
       const line = presence.querySelector('.presence-line');
       if (line) setTimeout(() => line.classList.add('revealed'), 200);
@@ -1527,43 +1528,30 @@ section{padding:60px 20px}
         setTimeout(() => { word.classList.add('visible'); }, 150 + i * 120);
       });
       setTimeout(() => { if (sub) sub.classList.add('visible'); }, 150 + words.length * 120 + 200);
-      triggerTriangleShimmer();
       observer.unobserve(entry.target);
     });
   }, { threshold: 0.2 });
 
   observer.observe(presence);
 
-  function triggerTriangleShimmer() {
-    const paths = presence.querySelectorAll('.presence-bg svg path');
-    paths.forEach((path, i) => {
-      setTimeout(() => {
-        path.style.transition = 'fill 0.4s ease, opacity 0.4s ease';
-        path.style.opacity = '0.4';
-        setTimeout(() => { path.style.opacity = '1'; }, 200);
-      }, i * 6);
-    });
-  }
-
-  let mouseX = 0, mouseY = 0, currentX = 0, currentY = 0;
-  presence.addEventListener('mousemove', (e) => {
-    const rect = presence.getBoundingClientRect();
-    mouseX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-    mouseY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-  });
-  presence.addEventListener('mouseleave', () => { mouseX = 0; mouseY = 0; });
-
-  function lerpBg() {
-    currentX += (mouseX * 20 - currentX) * 0.06;
-    currentY += (mouseY * 12 - currentY) * 0.06;
-    if (bg) bg.style.transform = `translate(${currentX}px, ${currentY}px) scale(1.05)`;
-    requestAnimationFrame(lerpBg);
-  }
-  lerpBg();
-
-  // GSAP scroll-driven parallax on the SVG background (desktop only — scrub)
+  // Desktop parallax on presence bg
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-    if (window.innerWidth > 768) {
+    if (window.innerWidth > 768 && bg) {
+      let mouseX = 0, mouseY = 0, currentX = 0, currentY = 0;
+      presence.addEventListener('mousemove', (e) => {
+        const rect = presence.getBoundingClientRect();
+        mouseX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        mouseY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      });
+      presence.addEventListener('mouseleave', () => { mouseX = 0; mouseY = 0; });
+      function lerpBg() {
+        currentX += (mouseX * 20 - currentX) * 0.06;
+        currentY += (mouseY * 12 - currentY) * 0.06;
+        bg.style.transform = 'translate(' + currentX + 'px, ' + currentY + 'px) scale(1.05)';
+        requestAnimationFrame(lerpBg);
+      }
+      lerpBg();
+
       gsap.to('.presence-bg', {
         y: -80,
         ease: 'none',
@@ -1574,68 +1562,12 @@ section{padding:60px 20px}
           scrub: true,
         }
       });
-    } else {
-      // Mobile fallback — simple fade-in via IntersectionObserver
-      const els = document.querySelectorAll('.presence-bg');
-      const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.style.transition = 'transform 1s ease-out';
-            e.target.style.transform = 'translateY(-40px)';
-            obs.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.15 });
-      els.forEach(el => obs.observe(el));
     }
   }
 })();
 </script>
-<!-- PRESENCE 3D BACKGROUND (desktop only) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-<script>
-if(window.innerWidth>768){
-(function(){
-  var T=window.THREE;if(!T)return;
-  var c=document.getElementById('presence-3d'),s=document.getElementById('presence');
-  if(!c||!s)return;
-  function SN(){this.g=[[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],[1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],[0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]];this.p=[];for(var i=0;i<256;i++)this.p[i]=Math.floor(Math.random()*256);this.pm=[];for(var i=0;i<512;i++)this.pm[i]=this.p[i&255]}
-  SN.prototype.d=function(g,x,y){return g[0]*x+g[1]*y};
-  SN.prototype.n=function(xi,yi){var F=.5*(Math.sqrt(3)-1),G=(3-Math.sqrt(3))/6,u=(xi+yi)*F,i=Math.floor(xi+u),j=Math.floor(yi+u),t=(i+j)*G,x0=xi-(i-t),y0=yi-(j-t),i1=x0>y0?1:0,j1=x0>y0?0:1,x1=x0-i1+G,y1=y0-j1+G,x2=x0-1+2*G,y2=y0-1+2*G,ii=i&255,jj=j&255,g0=this.pm[ii+this.pm[jj]]%12,g1=this.pm[ii+i1+this.pm[jj+j1]]%12,g2=this.pm[ii+1+this.pm[jj+1]]%12,n0=0,n1=0,n2=0,t0=.5-x0*x0-y0*y0;if(t0>=0){t0*=t0;n0=t0*t0*this.d(this.g[g0],x0,y0)}var t1=.5-x1*x1-y1*y1;if(t1>=0){t1*=t1;n1=t1*t1*this.d(this.g[g1],x1,y1)}var t2=.5-x2*x2-y2*y2;if(t2>=0){t2*=t2;n2=t2*t2*this.d(this.g[g2],x2,y2)}return 70*(n0+n1+n2)};
-  var w=c.clientWidth||innerWidth,h=c.clientHeight||innerHeight;
-  var r=new T.WebGLRenderer({antialias:true});r.setPixelRatio(Math.min(devicePixelRatio,2));r.setSize(w,h);r.setClearColor(0x000000);c.appendChild(r.domElement);
-  var sc=new T.Scene();sc.fog=new T.FogExp2(0x000000,0.0025);
-  var cam=new T.PerspectiveCamera(60,w/h,1,1000);cam.position.set(0,0,180);
-  var geo=new T.PlaneGeometry(500,500,50,50);
-  var mat=new T.MeshPhongMaterial({color:0x0a0a0a,specular:0x555555,shininess:50,flatShading:true,side:T.DoubleSide});
-  var msh=new T.Mesh(geo,mat);msh.rotation.x=-0.6;msh.position.y=-60;msh.position.z=-40;sc.add(msh);
-  var pa=geo.getAttribute('position'),oz=new Float32Array(pa.count);
-  for(var i=0;i<pa.count;i++)oz[i]=pa.getZ(i);
-  sc.add(new T.AmbientLight(0x111118,0.8));
-  var l1=new T.PointLight(0xffffff,3,400);l1.position.set(0,60,120);sc.add(l1);
-  var l2=new T.PointLight(0xc8ff00,0.5,300);l2.position.set(-100,40,80);sc.add(l2);
-  var l3=new T.PointLight(0x2244aa,0.6,400);l3.position.set(50,-80,-60);sc.add(l3);
-  var mx={x:0,y:0},sm={x:0,y:0},mw=new T.Vector3(),rc=new T.Raycaster(),nd=new T.Vector2(),vt=new T.Vector3();
-  addEventListener('mousemove',function(e){mx.x=(e.clientX/innerWidth)*2-1;mx.y=-(e.clientY/innerHeight)*2+1});
-  var sn=new SN(),ck=new T.Clock(),act=false;
-  var ob=new IntersectionObserver(function(e){act=e[0].isIntersecting},{threshold:0});ob.observe(s);
-  function anim(){
-    requestAnimationFrame(anim);if(!act)return;
-    var t=ck.getElapsedTime();sm.x+=(mx.x-sm.x)*0.06;sm.y+=(mx.y-sm.y)*0.06;
-    l1.position.x=sm.x*200;l1.position.y=sm.y*100+60;l2.position.x=-sm.x*120;
-    nd.set(sm.x,sm.y);rc.setFromCamera(nd,cam);
-    var hi=rc.intersectObject(msh);if(hi.length>0)mw.copy(hi[0].point);
-    for(var i=0;i<pa.count;i++){var x=pa.getX(i),y=pa.getY(i),z=oz[i]+sn.n(x*0.012+t*0.15,y*0.012+t*0.1)*8;if(hi.length>0){vt.set(x,y,0);msh.localToWorld(vt);var d2=(vt.x-mw.x)*(vt.x-mw.x)+(vt.y-mw.y)*(vt.y-mw.y);if(d2<6400){var d=Math.sqrt(d2),inf=1-d/80;z+=inf*inf*(3-2*inf)*18}}pa.setZ(i,z)}
-    pa.needsUpdate=true;geo.computeVertexNormals();
-    cam.position.x+=(sm.x*15-cam.position.x)*0.02;cam.position.y+=(sm.y*8-cam.position.y)*0.02;cam.lookAt(0,-30,-40);
-    r.render(sc,cam);
-  }
-  anim();
-  addEventListener('resize',function(){var w2=c.clientWidth||innerWidth,h2=c.clientHeight||innerHeight;cam.aspect=w2/h2;cam.updateProjectionMatrix();r.setSize(w2,h2)});
-  delete window.THREE;
-})();
-}
-</script>
+
+<!-- MAGNETIC BUTTON -->
 <script>
 (function() {
   const btn = document.getElementById('open-contact-modal');
@@ -1785,9 +1717,8 @@ if(window.innerWidth>768){
   function closeModal() {
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-    document.documentElement.style.overflow = '';
-    if(window.forceScroll) window.forceScroll();
+    window.forceScroll();
+    setTimeout(window.forceScroll, 350);
   }
 
   if (openBtn) {
@@ -1797,7 +1728,7 @@ if(window.innerWidth>768){
     });
   }
 
-  // All #contact anchor links scroll to CTA section; pricing CTAs open modal directly
+  // Pricing CTAs open modal directly
   document.querySelectorAll('.pricing-cta').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
       e.preventDefault();
@@ -1857,9 +1788,8 @@ if(window.innerWidth>768){
   function hideConfirmation() {
     confirmPopup.classList.remove('is-open');
     confirmPopup.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-    document.documentElement.style.overflow = '';
-    if(window.forceScroll) window.forceScroll();
+    window.forceScroll();
+    setTimeout(window.forceScroll, 350);
   }
 
   if (confirmCloseBtn) confirmCloseBtn.addEventListener('click', hideConfirmation);
@@ -1913,7 +1843,8 @@ if(window.innerWidth>768){
   }
 })();
 </script>
-<!-- MOBILE HAMBURGER MENU (FIX 5) -->
+
+<!-- STEP 9: MOBILE HAMBURGER MENU -->
 <script>
 (function(){
   var ham = document.getElementById('nav-hamburger');
@@ -1924,8 +1855,8 @@ if(window.innerWidth>768){
   function closeMenu(){
     ham.classList.remove('active');
     navLinks.classList.remove('mobile-open');
-    if(window.forceScroll) window.forceScroll();
-    setTimeout(function(){ if(window.forceScroll) window.forceScroll(); }, 350);
+    window.forceScroll();
+    setTimeout(window.forceScroll, 350);
     if(ctaBtn) ctaBtn.style.display = '';
   }
 
@@ -1947,23 +1878,26 @@ if(window.innerWidth>768){
     if(navLinks.classList.contains('mobile-open') && !navLinks.contains(e.target) && !ham.contains(e.target)) closeMenu();
   });
 
+  // Every nav link closes menu when tapped
   navLinks.querySelectorAll('a[href^="#"]').forEach(function(link){
     link.addEventListener('click', function(e){
       e.preventDefault();
       var target = document.querySelector(link.getAttribute('href'));
       closeMenu();
+      window.forceScroll();
       if(target){
         setTimeout(function(){
-          if(window.forceScroll) window.forceScroll();
+          window.forceScroll();
           var top = target.getBoundingClientRect().top + window.pageYOffset - 70;
           window.scrollTo({top:top, behavior:'smooth'});
-          setTimeout(function(){ if(window.forceScroll) window.forceScroll(); }, 500);
+          setTimeout(window.forceScroll, 500);
         }, 300);
       }
     });
   });
 })();
 </script>
+
 <!-- COOKIE BANNER -->
 <div id="cookie-bar" style="display:none;position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:9998;align-items:center;gap:20px;padding:14px 24px;background:rgba(15,15,15,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);border-radius:100px;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,0.4);animation:cookieSlideUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards">
   <span id="cookie-text" style="font-family:'Satoshi',sans-serif;font-size:13px;color:rgba(255,255,255,0.5);letter-spacing:0.01em">We use analytics cookies to improve your experience.</span>
@@ -1998,137 +1932,46 @@ if(window.innerWidth>768){
   }
 })();
 </script>
-<!-- Video preload handled by unified video system -->
-<!-- GSAP SCROLLTRIGGER REFRESH ON LOAD -->
+
+<!-- STEP 8: SCROLLTRIGGER REFRESH ON LOAD -->
 <script>
 window.addEventListener('load', function(){
   if(window.ScrollTrigger){
     ScrollTrigger.refresh();
     ScrollTrigger.normalizeScroll(false);
   }
-  if(window.forceScroll) window.forceScroll();
+  window.forceScroll();
 });
 </script>
 
-<!-- FIX 4 — UNIFIED VIDEO SYSTEM -->
+<!-- STEP 11: VIDEO INTERSECTION OBSERVER -->
 <script>
 (function() {
-
-  // Hide all native video controls always
-  var styleEl = document.createElement('style');
-  styleEl.textContent = '\
-    video::-webkit-media-controls,\
-    video::-webkit-media-controls-enclosure,\
-    video::-webkit-media-controls-panel,\
-    video::-webkit-media-controls-play-button {\
-      display: none !important;\
-      -webkit-appearance: none;\
-    }\
-    video {\
-      -webkit-appearance: none;\
-    }\
-  ';
-  document.head.appendChild(styleEl);
-
-  var isMobile = window.innerWidth <= 768;
-
-  // Get hero videos
-  var heroDesktop = document.getElementById('hero-video-desktop');
-  var heroMobile = document.getElementById('hero-video-mobile');
-  var activeHero = isMobile ? heroMobile : heroDesktop;
-
-  // Show correct hero video
-  if(isMobile){
-    if(heroMobile) heroMobile.style.display = 'block';
-    if(heroDesktop) heroDesktop.style.display = 'none';
-  } else {
-    if(heroDesktop) heroDesktop.style.display = 'block';
-    if(heroMobile) heroMobile.style.display = 'none';
+  var videos = document.querySelectorAll('video');
+  if (!('IntersectionObserver' in window)) {
+    videos.forEach(function(v) { v.muted = true; v.play().catch(function(){}); });
+    return;
   }
-
-  // All non-hero videos
-  var sectionVideos = Array.from(
-    document.querySelectorAll('video')
-  ).filter(function(v) {
-    return v.id !== 'hero-video-desktop' && v.id !== 'hero-video-mobile';
-  });
-
-  // Set all section videos to not preload
-  sectionVideos.forEach(function(v) {
-    v.preload = 'none';
-    v.removeAttribute('autoplay');
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      var v = entry.target;
+      if (entry.isIntersecting) {
+        v.muted = true;
+        v.play().catch(function(){});
+      } else {
+        v.pause();
+      }
+    });
+  }, { threshold: 0.2 });
+  videos.forEach(function(v) {
     v.muted = true;
-    v.loop = true;
-    v.setAttribute('playsinline', '');
-    v.setAttribute('muted', '');
-    // Preserve client-video playback rate
+    // Set client videos to 1.5x speed
     if (v.classList.contains('client-video')) {
       v.addEventListener('loadedmetadata', function(){ v.playbackRate = 1.5; });
       v.addEventListener('play', function(){ v.playbackRate = 1.5; });
     }
+    obs.observe(v);
   });
-
-  // Hero video setup
-  if(activeHero) {
-    activeHero.muted = true;
-    activeHero.loop = true;
-    activeHero.preload = 'auto';
-    activeHero.setAttribute('playsinline', '');
-    activeHero.play().catch(function(){});
-  }
-
-  // iOS Safari unlock — play hero on first user interaction
-  // CRITICAL: never call .play() synchronously inside touchstart —
-  // iOS treats that as a media gesture and kills the scroll.
-  // Use touchend (fires after scroll intent is resolved) and click.
-  var unlocked = false;
-  var unlock = function() {
-    if(unlocked) return;
-    unlocked = true;
-    if(activeHero) {
-      activeHero.play().catch(function(){});
-    }
-  };
-  document.addEventListener('touchend', unlock, {once: true, passive: true});
-  document.addEventListener('click', unlock, {once: true});
-
-  // Section videos — play on scroll into view, preload 200px before
-  var videoObserver = new IntersectionObserver(
-    function(entries) {
-      entries.forEach(function(entry) {
-        var v = entry.target;
-        if(entry.isIntersecting) {
-          if(v.preload === 'none') {
-            v.preload = 'auto';
-            v.load();
-          }
-          v.play().catch(function(){});
-        } else {
-          v.pause();
-        }
-      });
-    },
-    {
-      threshold: 0.1,
-      rootMargin: '200px 0px 0px 0px'
-    }
-  );
-
-  sectionVideos.forEach(function(v) {
-    videoObserver.observe(v);
-  });
-
-  // After first interaction on mobile, pre-unlock all section videos
-  // Use touchend, not touchstart — same reason as hero unlock above
-  if(isMobile) {
-    var preUnlock = function() {
-      sectionVideos.forEach(function(v) {
-        v.play().then(function(){ v.pause(); }).catch(function(){});
-      });
-    };
-    window.addEventListener('touchend', preUnlock, {once: true, passive: true});
-  }
-
 })();
 </script>
 </body>
