@@ -526,6 +526,11 @@ section{padding:60px 20px}
   .nav-hamburger {
     position: relative;
     z-index: 10000;
+    pointer-events: auto !important;
+  }
+  .navbar {
+    pointer-events: auto !important;
+    z-index: 10001;
   }
 }
 
@@ -798,77 +803,81 @@ window._touchBlocker = null;
 </script>
 
 <script>
-/* ─── STEP 6: HERO SCROLL GATE (MOBILE ONLY — BYPASSABLE) ─── */
+/* ─── HERO SCROLL GATE v3 (MOBILE ONLY — TRULY BYPASSABLE) ─── */
 (function() {
   if (window.innerWidth > 768) return;
   if (sessionStorage.getItem('arya_hero_seen') === 'true') return;
 
   var heroVideo = document.getElementById('hero-video-mobile') ||
-                  document.querySelector('.hero-video-mobile') ||
                   document.querySelector('.hero video');
-  if (!heroVideo) return;
-
-  var scrollY = window.scrollY || 0;
-  document.body.style.position = 'fixed';
-  document.body.style.top      = '-' + scrollY + 'px';
-  document.body.style.width    = '100%';
-  document.body.style.overflow = 'hidden';
-
   var unlocked = false;
 
   function unlockPage() {
     if (unlocked) return;
     unlocked = true;
-
-    var storedY = Math.abs(parseInt(document.body.style.top || '0'));
+    document.removeEventListener('touchmove', touchBlocker, false);
     document.body.style.position = '';
-    document.body.style.top      = '';
-    document.body.style.width    = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
     document.body.style.overflow = '';
     document.documentElement.style.overflow = '';
-    window.scrollTo(0, storedY);
-
-    if (window._touchBlocker) {
-      document.removeEventListener('touchmove', window._touchBlocker, false);
-    }
-
+    window.scrollTo(0, 0);
     sessionStorage.setItem('arya_hero_seen', 'true');
   }
 
-  window._touchBlocker = function(e) { e.preventDefault(); };
-  document.addEventListener('touchmove', window._touchBlocker, { passive: false });
+  function touchBlocker(e) {
+    if (e.target.closest('nav') ||
+        e.target.closest('header') ||
+        e.target.closest('.navbar') ||
+        e.target.closest('.nav-hamburger') ||
+        e.target.closest('.nav-links') ||
+        e.target.closest('.nav-cta-btn')) {
+      return;
+    }
+    e.preventDefault();
+  }
+  document.addEventListener('touchmove', touchBlocker, { passive: false });
 
-  // 1. Video ends naturally
-  heroVideo.addEventListener('ended', unlockPage, { once: true });
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.width = '100%';
+  document.body.style.top = '0px';
 
-  // 2. Desktop wheel (safety)
-  window.addEventListener('wheel', unlockPage, { once: true, passive: true });
-
-  // 3. Intentional downward swipe unlocks immediately
+  // 1. Downward swipe — 20px+ in under 500ms = user intent, unlock immediately
   var touchStartY = 0;
+  var touchStartTime = 0;
   document.addEventListener('touchstart', function(e) {
     touchStartY = e.touches[0].clientY;
+    touchStartTime = Date.now();
   }, { passive: true });
   document.addEventListener('touchend', function(e) {
-    if (touchStartY - e.changedTouches[0].clientY > 40) {
+    var deltaY = touchStartY - e.changedTouches[0].clientY;
+    var deltaTime = Date.now() - touchStartTime;
+    if (deltaY > 20 && deltaTime < 500) {
       unlockPage();
     }
   }, { passive: true });
 
-  // 4. Nav link tap while locked
-  document.querySelectorAll('nav a, .mobile-menu a, .nav-links a').forEach(function(l) {
-    l.addEventListener('click', unlockPage);
+  // 2. Video ends naturally
+  if (heroVideo) {
+    heroVideo.addEventListener('ended', unlockPage, { once: true });
+    setTimeout(function() {
+      if (!unlocked && heroVideo.readyState < 3) unlockPage();
+    }, 3000);
+    heroVideo.addEventListener('error', unlockPage, { once: true });
+  }
+
+  // 3. Nav/hamburger tap while locked — unlock then let tap proceed
+  document.querySelectorAll('nav a, nav button, .nav-hamburger, .nav-links a, .nav-cta-btn').forEach(function(el) {
+    el.addEventListener('touchend', unlockPage, { passive: true });
+    el.addEventListener('click', unlockPage);
   });
 
-  // 5. Hard safety fallback: 8 seconds max
+  // 4. Wheel (safety for desktop edge cases)
+  window.addEventListener('wheel', unlockPage, { once: true, passive: true });
+
+  // 5. Hard safety: 8 seconds max
   setTimeout(unlockPage, 8000);
-
-  // 6. Video stall: if video hasn't started within 3s, unlock
-  setTimeout(function() {
-    if (!unlocked && heroVideo.readyState < 2) unlockPage();
-  }, 3000);
-
-  heroVideo.addEventListener('error', unlockPage, { once: true });
 })();
 </script>
 
