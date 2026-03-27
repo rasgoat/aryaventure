@@ -13,9 +13,13 @@
 <meta property="og:url" content="https://aryaventure.com">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://aryaventure.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Arya Venture — Premium Digital Agency">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Arya Venture | Premium Websites">
 <meta name="twitter:description" content="Premium digital agency building custom websites with search optimization.">
+<meta name="twitter:image" content="https://aryaventure.com/og-image.png">
 <link rel="alternate" hreflang="en" href="https://aryaventure.com">
 <link rel="alternate" hreflang="x-default" href="https://aryaventure.com">
 
@@ -678,6 +682,76 @@ section[id], [id] {
 @media(max-width:768px){
 .confirm-card{padding:44px 28px 36px;border-radius:18px}
 .confirm-title{font-size:22px}
+}
+
+/* ═══ MOBILE ABOUT SECTION — DEFINITIVE FIX ═══ */
+@media (max-width: 768px) {
+  #about {
+    padding: 60px 24px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+  #about .about-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    min-height: auto;
+    width: 100%;
+    max-width: 100%;
+  }
+  #about .about-body {
+    font-size: 15px;
+    line-height: 1.75;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  #about .section-title {
+    max-width: 100%;
+    word-wrap: break-word;
+  }
+  #about .about-tag-line {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 13px;
+    max-width: 100%;
+  }
+  #about .about-video-wrap {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 16/9;
+    margin: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 220px;
+  }
+  #about .about-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    will-change: auto;
+    transform: none;
+  }
+  #about * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* ═══ GLOBAL MOBILE OVERFLOW KILL ═══ */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden !important;
+    width: 100%;
+    max-width: 100vw;
+  }
+  body > * {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
 }
 </style>
 
