@@ -147,7 +147,10 @@ html,body{overflow-y:auto!important;touch-action:pan-y!important}
 .presence-bg{position:absolute;inset:0;z-index:0;overflow:hidden;transform:scale(1.15);opacity:0;transition:transform 2s cubic-bezier(0.16,1,0.3,1),opacity 1.5s ease}
 .presence-bg.revealed{transform:scale(1);opacity:1}
 .presence-bg svg{width:100%;height:100%;display:block}
-.presence-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.35;pointer-events:none;touch-action:none}
+.presence-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.35;pointer-events:none;touch-action:none;display:none}
+#presence-3d{position:absolute;inset:0;z-index:0}
+#presence-3d canvas{width:100%!important;height:100%!important;display:block}
+@media(max-width:768px){.presence-video{display:block}#presence-3d{display:none}}
 .presence-overlay{position:absolute;inset:0;z-index:1;background:rgba(0,0,0,0.55)}
 .presence-line{position:absolute;top:50%;left:0;right:0;height:1px;z-index:2;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform 1.8s cubic-bezier(0.16,1,0.3,1) 0.3s;opacity:0.15}
 .presence-line.revealed{transform:scaleX(1)}
@@ -187,13 +190,13 @@ section{padding:120px var(--px)}
 .services-header{text-align:center;margin-bottom:80px}
 .services-header .section-title{margin-bottom:16px}
 .services-sub{font-family:var(--font-body);font-size:18px;color:var(--gray-400);max-width:500px;margin:0 auto;line-height:1.6}
-.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:stretch}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:stretch;padding-top:20px}
 .pricing-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:40px 32px;min-height:700px;display:flex;flex-direction:column;position:relative;transition:border-color 0.4s ease,background 0.4s ease,transform 0.5s var(--ease-out),box-shadow 0.5s ease;-webkit-transform:translateZ(0);transform:translateZ(0)}
 .pricing-card:hover{border-color:rgba(255,255,255,0.16);background:rgba(255,255,255,0.04);transform:translateY(-6px)}
 .pricing-card:hover .check{color:var(--accent)!important;transition:color 0.3s ease}
 .pricing-card.featured{border-color:rgba(200,255,0,0.3);box-shadow:0 0 40px rgba(200,255,0,0.06)}
 .pricing-card.featured:hover{box-shadow:0 0 60px rgba(200,255,0,0.1)}
-.pricing-card.featured::before{content:'MOST POPULAR';position:absolute;top:-16px;left:50%;transform:translateX(-50%);padding:6px 16px;background:var(--accent);color:var(--black);font-family:var(--font-display);font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border-radius:20px}
+.pricing-card.featured::before{content:'MOST POPULAR';position:absolute;top:-14px;left:50%;transform:translateX(-50%);padding:6px 20px;background:var(--accent);color:var(--black);font-family:var(--font-display);font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border-radius:20px;white-space:nowrap;z-index:2}
 .pricing-tier{font-family:var(--font-body);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray-400);margin-bottom:16px}
 .pricing-name{font-family:var(--font-display);font-weight:700;font-size:clamp(26px,2.5vw,32px);color:var(--white);margin-bottom:12px;line-height:1.2}
 .pricing-desc{font-family:var(--font-body);font-size:15px;line-height:1.6;color:var(--gray-400);margin-bottom:32px}
@@ -731,6 +734,7 @@ section{padding:60px 20px}
 
 <!-- PRESENCE SECTION -->
 <section id="presence">
+  <div id="presence-3d"></div>
   <video class="presence-video" autoplay muted loop playsinline preload="none">
     <source src="videos/Build-loop.mp4" type="video/mp4">
   </video>
@@ -1507,6 +1511,51 @@ section{padding:60px 20px}
     }
   }
 })();
+</script>
+<!-- PRESENCE 3D BACKGROUND (desktop only) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script>
+if(window.innerWidth>768){
+(function(){
+  var T=window.THREE;if(!T)return;
+  var c=document.getElementById('presence-3d'),s=document.getElementById('presence');
+  if(!c||!s)return;
+  function SN(){this.g=[[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],[1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],[0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]];this.p=[];for(var i=0;i<256;i++)this.p[i]=Math.floor(Math.random()*256);this.pm=[];for(var i=0;i<512;i++)this.pm[i]=this.p[i&255]}
+  SN.prototype.d=function(g,x,y){return g[0]*x+g[1]*y};
+  SN.prototype.n=function(xi,yi){var F=.5*(Math.sqrt(3)-1),G=(3-Math.sqrt(3))/6,u=(xi+yi)*F,i=Math.floor(xi+u),j=Math.floor(yi+u),t=(i+j)*G,x0=xi-(i-t),y0=yi-(j-t),i1=x0>y0?1:0,j1=x0>y0?0:1,x1=x0-i1+G,y1=y0-j1+G,x2=x0-1+2*G,y2=y0-1+2*G,ii=i&255,jj=j&255,g0=this.pm[ii+this.pm[jj]]%12,g1=this.pm[ii+i1+this.pm[jj+j1]]%12,g2=this.pm[ii+1+this.pm[jj+1]]%12,n0=0,n1=0,n2=0,t0=.5-x0*x0-y0*y0;if(t0>=0){t0*=t0;n0=t0*t0*this.d(this.g[g0],x0,y0)}var t1=.5-x1*x1-y1*y1;if(t1>=0){t1*=t1;n1=t1*t1*this.d(this.g[g1],x1,y1)}var t2=.5-x2*x2-y2*y2;if(t2>=0){t2*=t2;n2=t2*t2*this.d(this.g[g2],x2,y2)}return 70*(n0+n1+n2)};
+  var w=c.clientWidth||innerWidth,h=c.clientHeight||innerHeight;
+  var r=new T.WebGLRenderer({antialias:true});r.setPixelRatio(Math.min(devicePixelRatio,2));r.setSize(w,h);r.setClearColor(0x000000);c.appendChild(r.domElement);
+  var sc=new T.Scene();sc.fog=new T.FogExp2(0x000000,0.0025);
+  var cam=new T.PerspectiveCamera(60,w/h,1,1000);cam.position.set(0,0,180);
+  var geo=new T.PlaneGeometry(500,500,50,50);
+  var mat=new T.MeshPhongMaterial({color:0x0a0a0a,specular:0x555555,shininess:50,flatShading:true,side:T.DoubleSide});
+  var msh=new T.Mesh(geo,mat);msh.rotation.x=-0.6;msh.position.y=-60;msh.position.z=-40;sc.add(msh);
+  var pa=geo.getAttribute('position'),oz=new Float32Array(pa.count);
+  for(var i=0;i<pa.count;i++)oz[i]=pa.getZ(i);
+  sc.add(new T.AmbientLight(0x111118,0.8));
+  var l1=new T.PointLight(0xffffff,3,400);l1.position.set(0,60,120);sc.add(l1);
+  var l2=new T.PointLight(0xc8ff00,0.5,300);l2.position.set(-100,40,80);sc.add(l2);
+  var l3=new T.PointLight(0x2244aa,0.6,400);l3.position.set(50,-80,-60);sc.add(l3);
+  var mx={x:0,y:0},sm={x:0,y:0},mw=new T.Vector3(),rc=new T.Raycaster(),nd=new T.Vector2(),vt=new T.Vector3();
+  addEventListener('mousemove',function(e){mx.x=(e.clientX/innerWidth)*2-1;mx.y=-(e.clientY/innerHeight)*2+1});
+  var sn=new SN(),ck=new T.Clock(),act=false;
+  var ob=new IntersectionObserver(function(e){act=e[0].isIntersecting},{threshold:0});ob.observe(s);
+  function anim(){
+    requestAnimationFrame(anim);if(!act)return;
+    var t=ck.getElapsedTime();sm.x+=(mx.x-sm.x)*0.06;sm.y+=(mx.y-sm.y)*0.06;
+    l1.position.x=sm.x*200;l1.position.y=sm.y*100+60;l2.position.x=-sm.x*120;
+    nd.set(sm.x,sm.y);rc.setFromCamera(nd,cam);
+    var hi=rc.intersectObject(msh);if(hi.length>0)mw.copy(hi[0].point);
+    for(var i=0;i<pa.count;i++){var x=pa.getX(i),y=pa.getY(i),z=oz[i]+sn.n(x*0.012+t*0.15,y*0.012+t*0.1)*8;if(hi.length>0){vt.set(x,y,0);msh.localToWorld(vt);var d2=(vt.x-mw.x)*(vt.x-mw.x)+(vt.y-mw.y)*(vt.y-mw.y);if(d2<6400){var d=Math.sqrt(d2),inf=1-d/80;z+=inf*inf*(3-2*inf)*18}}pa.setZ(i,z)}
+    pa.needsUpdate=true;geo.computeVertexNormals();
+    cam.position.x+=(sm.x*15-cam.position.x)*0.02;cam.position.y+=(sm.y*8-cam.position.y)*0.02;cam.lookAt(0,-30,-40);
+    r.render(sc,cam);
+  }
+  anim();
+  addEventListener('resize',function(){var w2=c.clientWidth||innerWidth,h2=c.clientHeight||innerHeight;cam.aspect=w2/h2;cam.updateProjectionMatrix();r.setSize(w2,h2)});
+  delete window.THREE;
+})();
+}
 </script>
 <script>
 (function() {
