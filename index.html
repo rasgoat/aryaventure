@@ -63,7 +63,7 @@
   --px: clamp(24px,4vw,80px);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
-html{background:var(--black);color:var(--off-white);overflow-x:hidden;-webkit-overflow-scrolling:touch}
+html{background:var(--black);color:var(--off-white);overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
 a,button{transition:color 0.3s cubic-bezier(0.16,1,0.3,1),opacity 0.3s cubic-bezier(0.16,1,0.3,1),transform 0.3s cubic-bezier(0.16,1,0.3,1),background 0.3s cubic-bezier(0.16,1,0.3,1),border-color 0.3s cubic-bezier(0.16,1,0.3,1)}
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
@@ -482,7 +482,7 @@ section{padding:60px 20px}
     position: fixed;
     inset: 0;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     background: #000000;
     flex-direction: column;
     align-items: center;
@@ -751,12 +751,21 @@ section[id], [id] {
 @media (max-width: 768px) {
   html, body {
     overflow-x: hidden !important;
+    overflow-y: auto !important;
     width: 100%;
     max-width: 100vw;
   }
   body > * {
     max-width: 100vw;
     overflow-x: hidden;
+  }
+  /* Faster taps — remove 300ms click delay */
+  a, button, [role="button"], .nav-hamburger, .pricing-cta, .option-pill, .modal-close, .confirm-cta {
+    touch-action: manipulation;
+  }
+  /* Prevent pull-to-refresh interference */
+  html {
+    overscroll-behavior-y: none;
   }
 }
 </style>
@@ -803,82 +812,9 @@ window._touchBlocker = null;
 </script>
 
 <script>
-/* ─── HERO SCROLL GATE v3 (MOBILE ONLY — TRULY BYPASSABLE) ─── */
-(function() {
-  if (window.innerWidth > 768) return;
-  if (sessionStorage.getItem('arya_hero_seen') === 'true') return;
-
-  var heroVideo = document.getElementById('hero-video-mobile') ||
-                  document.querySelector('.hero video');
-  var unlocked = false;
-
-  function unlockPage() {
-    if (unlocked) return;
-    unlocked = true;
-    document.removeEventListener('touchmove', touchBlocker, false);
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.width = '';
-    document.body.style.overflow = '';
-    document.documentElement.style.overflow = '';
-    window.scrollTo(0, 0);
-    sessionStorage.setItem('arya_hero_seen', 'true');
-  }
-
-  function touchBlocker(e) {
-    if (e.target.closest('nav') ||
-        e.target.closest('header') ||
-        e.target.closest('.navbar') ||
-        e.target.closest('.nav-hamburger') ||
-        e.target.closest('.nav-links') ||
-        e.target.closest('.nav-cta-btn')) {
-      return;
-    }
-    e.preventDefault();
-  }
-  document.addEventListener('touchmove', touchBlocker, { passive: false });
-
-  document.body.style.overflow = 'hidden';
-  document.body.style.position = 'fixed';
-  document.body.style.width = '100%';
-  document.body.style.top = '0px';
-
-  // 1. Downward swipe — 20px+ in under 500ms = user intent, unlock immediately
-  var touchStartY = 0;
-  var touchStartTime = 0;
-  document.addEventListener('touchstart', function(e) {
-    touchStartY = e.touches[0].clientY;
-    touchStartTime = Date.now();
-  }, { passive: true });
-  document.addEventListener('touchend', function(e) {
-    var deltaY = touchStartY - e.changedTouches[0].clientY;
-    var deltaTime = Date.now() - touchStartTime;
-    if (deltaY > 20 && deltaTime < 500) {
-      unlockPage();
-    }
-  }, { passive: true });
-
-  // 2. Video ends naturally
-  if (heroVideo) {
-    heroVideo.addEventListener('ended', unlockPage, { once: true });
-    setTimeout(function() {
-      if (!unlocked && heroVideo.readyState < 3) unlockPage();
-    }, 3000);
-    heroVideo.addEventListener('error', unlockPage, { once: true });
-  }
-
-  // 3. Nav/hamburger tap while locked — unlock then let tap proceed
-  document.querySelectorAll('nav a, nav button, .nav-hamburger, .nav-links a, .nav-cta-btn').forEach(function(el) {
-    el.addEventListener('touchend', unlockPage, { passive: true });
-    el.addEventListener('click', unlockPage);
-  });
-
-  // 4. Wheel (safety for desktop edge cases)
-  window.addEventListener('wheel', unlockPage, { once: true, passive: true });
-
-  // 5. Hard safety: 8 seconds max
-  setTimeout(unlockPage, 8000);
-})();
+/* ─── HERO: NO SCROLL LOCK — ZERO FRICTION ─── */
+/* Hero video plays as ambient background. Users scroll freely from page load.
+   Same approach as Flora et Labora — proven, simple, no traps. */
 </script>
 
 <!-- PRELOADER -->
@@ -1412,7 +1348,7 @@ window._touchBlocker = null;
   var lenis=null;
 
   if(!isMob){
-    lenis=new Lenis({lerp:0.09,smoothWheel:true,wheelMultiplier:1.0,duration:1.0});
+    lenis=new Lenis({lerp:0.1,smoothWheel:true,wheelMultiplier:1.1,duration:0.9});
     lenis.on('scroll',ScrollTrigger.update);
     gsap.ticker.add(time=>lenis.raf(time*1000));
     gsap.ticker.lagSmoothing(0);
@@ -1482,44 +1418,49 @@ window._touchBlocker = null;
     // Scroll indicator fades in after delay
     gsap.fromTo('.hero-scroll', {opacity:0, y:10}, {opacity:1, y:0, duration:1.2, ease:'power3.out', delay:2.2});
 
-    // SECTION REVEALS — lighter on mobile
-    gsap.utils.toArray('section:not(.hero):not(.cta-section),.marquee,footer').forEach(el=>{
-      gsap.from(el,{opacity:0,y:isMob?15:30,duration:isMob?0.6:1.0,ease:'power3.out',
-        scrollTrigger:{trigger:el,start:'top 95%',toggleActions:'play none none none'}
+    // SECTION REVEALS — batch on mobile for fewer ScrollTrigger instances
+    if(isMob){
+      ScrollTrigger.batch('section:not(.hero):not(.cta-section),.marquee,footer',{
+        onEnter:function(batch){gsap.from(batch,{opacity:0,y:10,duration:0.4,stagger:0.05,ease:'power2.out'})},
+        start:'top 95%',once:true
       });
-    });
-
-    // SPLIT REVEAL ON SCROLL
-    document.querySelectorAll('.section-title.split-reveal,.cta-title.split-reveal').forEach(el=>{
-      const chars=el.querySelectorAll('.char');if(!chars.length)return;
-      gsap.from(chars,{opacity:0,y:20,stagger:0.015,duration:0.5,ease:'power3.out',
-        scrollTrigger:{trigger:el,start:'top 80%',toggleActions:'play none none none'}
+    } else {
+      gsap.utils.toArray('section:not(.hero):not(.cta-section),.marquee,footer').forEach(el=>{
+        gsap.from(el,{opacity:0,y:30,duration:1.0,ease:'power3.out',
+          scrollTrigger:{trigger:el,start:'top 95%',toggleActions:'play none none none'}
+        });
       });
-    });
+    }
 
-    // SECTION TAG ANIMATIONS
-    document.querySelectorAll('.section-tag,.service-tag').forEach(el=>{
-      gsap.from(el,{opacity:0,x:-20,duration:0.5,ease:'power3.out',
-        scrollTrigger:{trigger:el,start:'top 85%',toggleActions:'play none none none'}
+    // SPLIT REVEAL, TAGS, BODY TEXT — desktop only (saves ~15 ScrollTrigger instances on mobile)
+    if(!isMob){
+      document.querySelectorAll('.section-title.split-reveal,.cta-title.split-reveal').forEach(el=>{
+        const chars=el.querySelectorAll('.char');if(!chars.length)return;
+        gsap.from(chars,{opacity:0,y:20,stagger:0.015,duration:0.5,ease:'power3.out',
+          scrollTrigger:{trigger:el,start:'top 80%',toggleActions:'play none none none'}
+        });
       });
-    });
-
-    // BODY TEXT FADE
-    document.querySelectorAll('.service-body,.about-body,.cta-sub').forEach(el=>{
-      gsap.from(el,{opacity:0,y:15,duration:0.8,ease:'power2.out',
-        scrollTrigger:{trigger:el,start:'top 85%',toggleActions:'play none none none'}
+      document.querySelectorAll('.section-tag,.service-tag').forEach(el=>{
+        gsap.from(el,{opacity:0,x:-20,duration:0.5,ease:'power3.out',
+          scrollTrigger:{trigger:el,start:'top 85%',toggleActions:'play none none none'}
+        });
       });
-    });
+      document.querySelectorAll('.service-body,.about-body,.cta-sub').forEach(el=>{
+        gsap.from(el,{opacity:0,y:15,duration:0.8,ease:'power2.out',
+          scrollTrigger:{trigger:el,start:'top 85%',toggleActions:'play none none none'}
+        });
+      });
+    }
 
-    // PRICING CARDS
-    document.querySelectorAll('.pricing-card').forEach((card,i)=>{
-      gsap.from(card,{opacity:0,y:40,scale:0.95,duration:0.7,ease:'power3.out',delay:i*0.1,
-        scrollTrigger:{trigger:'.pricing-grid',start:'top 80%',toggleActions:'play none none none'}});
-    });
-
-    // CTA LOGO
-    var ctaLogo=document.querySelector('.cta-logo');
-    if(ctaLogo){gsap.from(ctaLogo,{opacity:0,y:-10,duration:0.6,ease:'power2.out',scrollTrigger:{trigger:ctaLogo,start:'top 85%',toggleActions:'play none none none'}});}
+    // PRICING CARDS — desktop only stagger
+    if(!isMob){
+      document.querySelectorAll('.pricing-card').forEach((card,i)=>{
+        gsap.from(card,{opacity:0,y:40,scale:0.95,duration:0.7,ease:'power3.out',delay:i*0.1,
+          scrollTrigger:{trigger:'.pricing-grid',start:'top 80%',toggleActions:'play none none none'}});
+      });
+      var ctaLogo=document.querySelector('.cta-logo');
+      if(ctaLogo){gsap.from(ctaLogo,{opacity:0,y:-10,duration:0.6,ease:'power2.out',scrollTrigger:{trigger:ctaLogo,start:'top 85%',toggleActions:'play none none none'}});}
+    }
 
     // CASE STUDIES
     document.querySelectorAll('.case-study').forEach(cs=>{
@@ -1533,19 +1474,21 @@ window._touchBlocker = null;
       if(video) gsap.from(video,{opacity:0,y:20,duration:1.0,ease:'power3.out',
         scrollTrigger:{trigger:cs,start:'top 90%',toggleActions:'play none none none'}});
 
-      if(tag) gsap.from(tag,{opacity:0,x:-20,duration:0.5,ease:'power3.out',
-        scrollTrigger:{trigger:cs,start:'top 65%',toggleActions:'play none none none'}});
-      if(title) gsap.from(title,{opacity:0,y:30,duration:0.7,ease:'power3.out',delay:0.1,
-        scrollTrigger:{trigger:cs,start:'top 65%',toggleActions:'play none none none'}});
-      if(desc) gsap.from(desc,{opacity:0,y:20,duration:0.7,ease:'power3.out',delay:0.2,
-        scrollTrigger:{trigger:cs,start:'top 65%',toggleActions:'play none none none'}});
+      if(!isMob){
+        if(tag) gsap.from(tag,{opacity:0,x:-20,duration:0.5,ease:'power3.out',
+          scrollTrigger:{trigger:cs,start:'top 65%',toggleActions:'play none none none'}});
+        if(title) gsap.from(title,{opacity:0,y:30,duration:0.7,ease:'power3.out',delay:0.1,
+          scrollTrigger:{trigger:cs,start:'top 65%',toggleActions:'play none none none'}});
+        if(desc) gsap.from(desc,{opacity:0,y:20,duration:0.7,ease:'power3.out',delay:0.2,
+          scrollTrigger:{trigger:cs,start:'top 65%',toggleActions:'play none none none'}});
+      }
 
-      features.forEach((f,i)=>{
+      if(!isMob) features.forEach((f,i)=>{
         gsap.from(f,{opacity:0,x:20,duration:0.5,ease:'power3.out',delay:0.3+i*0.08,
           scrollTrigger:{trigger:cs,start:'top 60%',toggleActions:'play none none none'}});
       });
 
-      results.forEach((r,i)=>{
+      if(!isMob) results.forEach((r,i)=>{
         const numEl = r.querySelector('.case-result-num');
         if(!numEl) return;
         const raw = numEl.textContent;
@@ -1585,26 +1528,34 @@ window._touchBlocker = null;
       });
     });
 
-    // STAT BORDER DRAW
-    document.querySelectorAll('.stat').forEach(el=>{
-      gsap.from(el,{borderColor:'rgba(255,255,255,0)',duration:0.6,ease:'power2.out',
-        scrollTrigger:{trigger:el,start:'top 85%',toggleActions:'play none none none'}
+    // STAT BORDER DRAW — desktop only
+    if(!isMob){
+      document.querySelectorAll('.stat').forEach(el=>{
+        gsap.from(el,{borderColor:'rgba(255,255,255,0)',duration:0.6,ease:'power2.out',
+          scrollTrigger:{trigger:el,start:'top 85%',toggleActions:'play none none none'}
+        });
       });
-    });
+    }
 
-    // SHAPES GRID STAGGER
-    gsap.utils.toArray('.shapes-cell').forEach((cell,i)=>{
-      gsap.to(cell,{opacity:1,scale:1,duration:0.5,ease:'power3.out',delay:i*0.06,
-        scrollTrigger:{trigger:cell,start:'top 90%',toggleActions:'play none none none'}
+    // SHAPES GRID STAGGER — desktop only
+    if(!isMob){
+      gsap.utils.toArray('.shapes-cell').forEach((cell,i)=>{
+        gsap.to(cell,{opacity:1,scale:1,duration:0.5,ease:'power3.out',delay:i*0.06,
+          scrollTrigger:{trigger:cell,start:'top 90%',toggleActions:'play none none none'}
+        });
       });
-    });
+    } else {
+      gsap.utils.toArray('.shapes-cell').forEach(cell=>{gsap.set(cell,{opacity:1,scale:1})});
+    }
 
-    // FOOTER STAGGER
-    gsap.utils.toArray('.footer-grid > div').forEach((col,i)=>{
-      gsap.from(col,{opacity:0,y:30,duration:0.6,ease:'power3.out',delay:i*0.1,
-        scrollTrigger:{trigger:'footer',start:'top 90%',toggleActions:'play none none none'}
+    // FOOTER STAGGER — desktop only
+    if(!isMob){
+      gsap.utils.toArray('.footer-grid > div').forEach((col,i)=>{
+        gsap.from(col,{opacity:0,y:30,duration:0.6,ease:'power3.out',delay:i*0.1,
+          scrollTrigger:{trigger:'footer',start:'top 90%',toggleActions:'play none none none'}
+        });
       });
-    });
+    }
 
     // STEP 8: ScrollTrigger refresh + forceScroll on load
     ScrollTrigger.refresh();
@@ -2018,16 +1969,32 @@ if(window.innerWidth>768){
     if(ctaBtn) ctaBtn.style.display = '';
   }
 
-  ham.addEventListener('click', function(){
+  function openMenu(){
+    // Force navbar to y:0 so overlay covers full viewport
+    if(typeof gsap!=='undefined') gsap.set('.navbar',{y:0});
+    ham.classList.add('active');
+    navLinks.classList.add('mobile-open');
+    document.body.style.overflow = 'hidden';
+    if(ctaBtn) ctaBtn.style.display = 'none';
+  }
+
+  function toggleMenu(e){
+    if(e) e.stopPropagation();
     if(navLinks.classList.contains('mobile-open')){
       closeMenu();
     } else {
-      ham.classList.add('active');
-      navLinks.classList.add('mobile-open');
-      document.body.style.overflow = 'hidden';
-      if(ctaBtn) ctaBtn.style.display = 'none';
+      openMenu();
     }
-  });
+  }
+
+  ham.addEventListener('click', toggleMenu);
+
+  // Instant response on mobile — no 300ms click delay
+  ham.addEventListener('touchend', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    toggleMenu();
+  }, {passive: false});
 
   document.addEventListener('keydown', function(e){
     if(e.key==='Escape' && navLinks.classList.contains('mobile-open')) closeMenu();
@@ -2091,21 +2058,41 @@ if(window.innerWidth>768){
 })();
 </script>
 
-<!-- STEP 8: SCROLLTRIGGER REFRESH ON LOAD -->
+<!-- STEP 8: SCROLLTRIGGER REFRESH ON LOAD + MOBILE PIN KILLER -->
 <script>
 window.addEventListener('load', function(){
   if(window.ScrollTrigger){
     ScrollTrigger.refresh();
     ScrollTrigger.normalizeScroll(false);
+
+    // Kill ALL pinned ScrollTrigger instances on mobile — they cause scroll traps
+    if(window.innerWidth<=768){
+      ScrollTrigger.getAll().forEach(function(trigger){
+        if(trigger.pin) trigger.disable();
+      });
+    }
   }
   window.forceScroll();
+
+  // Mobile safety: if user touches screen and body is still fixed, release it
+  if(window.innerWidth<=768){
+    document.addEventListener('touchstart',function(){
+      if(document.body.style.position==='fixed'){
+        document.body.style.position='';
+        document.body.style.overflow='';
+        document.body.style.top='';
+        document.body.style.width='';
+      }
+    },{passive:true});
+  }
 });
 </script>
 
-<!-- STEP 11: VIDEO INTERSECTION OBSERVER -->
+<!-- STEP 11: VIDEO INTERSECTION OBSERVER — with scroll freedom guarantee -->
 <script>
 (function() {
   var videos = document.querySelectorAll('video');
+  var isMob = window.innerWidth <= 768;
   if (!('IntersectionObserver' in window)) {
     videos.forEach(function(v) { v.muted = true; v.play().catch(function(){}); });
     return;
@@ -2127,6 +2114,14 @@ window.addEventListener('load', function(){
     if (v.classList.contains('client-video')) {
       v.addEventListener('loadedmetadata', function(){ v.playbackRate = 1.5; });
       v.addEventListener('play', function(){ v.playbackRate = 1.5; });
+    }
+    // Ensure video containers never block scroll on mobile
+    if (isMob) {
+      var parent = v.parentElement;
+      if (parent) {
+        parent.style.touchAction = 'pan-y';
+        parent.style.overflow = 'visible';
+      }
     }
     obs.observe(v);
   });
