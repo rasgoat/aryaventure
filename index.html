@@ -289,7 +289,7 @@ img.logo:hover{opacity:0.7}
 
 /* RESPONSIVE */
 @media(max-width:1024px){
-.about-grid{grid-template-columns:1fr}.about-video-wrap{max-width:100%;margin-left:0}
+.about-grid{grid-template-columns:1fr;text-align:center}.about-video-wrap{max-width:100%;margin:0 auto}.about-body{max-width:100%}
 .pricing-grid{grid-template-columns:1fr 1fr;gap:16px}
 .footer-grid{grid-template-columns:1fr 1fr;gap:40px}
 .case-study-meta{grid-template-columns:1fr;gap:32px}
@@ -343,11 +343,11 @@ section{padding:60px 20px}
 .section-tag{font-size:11px}
 .services{padding:60px 20px}
 .pricing-name{font-size:clamp(20px,5vw,24px)}
-.about-grid{grid-template-columns:1fr;gap:40px}
-.about-video-wrap{max-width:100%;aspect-ratio:16/9;margin-left:auto;margin-right:auto}
+.about-grid{grid-template-columns:1fr;gap:32px;min-height:auto;text-align:center}
+.about-video-wrap{max-width:100%;aspect-ratio:16/9;margin:0 auto;border-radius:12px}
 .about-video{object-position:center center}
-.about-body{font-size:15px}
-.about-tag-line{justify-content:center}
+.about-body{font-size:15px;max-width:100%;margin-left:auto;margin-right:auto}
+.about-tag-line{justify-content:center;flex-wrap:wrap;font-size:13px}
 .marquee-track span{font-size:11px}
 .cta-title{font-size:clamp(32px,8vw,56px)}
 .work-header{padding:60px 20px 40px}
@@ -360,7 +360,7 @@ section{padding:60px 20px}
 @media(max-width:768px){
   video{-webkit-transform:translateZ(0);transform:translateZ(0);will-change:auto}
   .case-study-video{border-radius:12px}
-  .about-video-wrap{border-radius:12px}
+  .about-video-wrap{border-radius:12px;margin:0 auto}
   .hero-video{object-position:center center;-webkit-transform:none!important;transform:none!important;will-change:auto!important}
   /* Shapes grid mobile fixes */
   .shapes-logos-inner{gap:24px!important}
@@ -1398,9 +1398,9 @@ window._touchBlocker = null;
     // Scroll indicator fades in after delay
     gsap.fromTo('.hero-scroll', {opacity:0, y:10}, {opacity:1, y:0, duration:1.2, ease:'power3.out', delay:2.2});
 
-    // SECTION REVEALS
+    // SECTION REVEALS — lighter on mobile
     gsap.utils.toArray('section:not(.hero):not(.cta-section),.marquee,footer').forEach(el=>{
-      gsap.from(el,{opacity:0,y:30,duration:1.0,ease:'power3.out',
+      gsap.from(el,{opacity:0,y:isMob?15:30,duration:isMob?0.6:1.0,ease:'power3.out',
         scrollTrigger:{trigger:el,start:'top 95%',toggleActions:'play none none none'}
       });
     });
@@ -1479,8 +1479,12 @@ window._touchBlocker = null;
       });
     });
 
-    // ABOUT VIDEO REVEAL
-    gsap.from('.about-video-wrap',{opacity:0,scale:0.94,y:30,duration:1.5,ease:'power4.out',scrollTrigger:{trigger:'#about',start:'top 80%',toggleActions:'play none none none'}});
+    // ABOUT VIDEO REVEAL — simple fade on mobile (no scale to prevent jank)
+    if(isMob){
+      gsap.from('.about-video-wrap',{opacity:0,y:20,duration:0.8,ease:'power3.out',scrollTrigger:{trigger:'#about',start:'top 85%',toggleActions:'play none none none'}});
+    } else {
+      gsap.from('.about-video-wrap',{opacity:0,scale:0.94,y:30,duration:1.5,ease:'power4.out',scrollTrigger:{trigger:'#about',start:'top 80%',toggleActions:'play none none none'}});
+    }
 
     // STATS COUNT-UP + UNDERLINE DRAW
     document.querySelectorAll('.stat-number').forEach(el=>{
