@@ -91,7 +91,9 @@ section[id],div[id]{scroll-margin-top:80px}
 
 /* HERO */
 .hero{position:relative;width:100%;height:100vh;height:100dvh;overflow:visible;background:var(--black);padding:0}
-.hero-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;will-change:opacity;-webkit-transform:translateZ(0);transform:translateZ(0)}
+.hero-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;-webkit-transform:translateZ(0);transform:translateZ(0)}
+@media(min-width:769px){#hero-video-mobile{display:none}}
+@media(max-width:768px){#hero-video-desktop{display:none}}
 .hero-content{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:0 var(--px) 10vh;pointer-events:none;display:flex;flex-direction:column;align-items:center;text-align:center}
 h1.hero-tag,.hero-tag{font-family:var(--font-title);font-weight:700;font-size:clamp(19px,2.4vw,28px);letter-spacing:0.08em;text-transform:uppercase;color:#ffffff;margin-bottom:14px;margin-top:0}
 .hero-sub{font-family:var(--font-title);font-weight:500;font-size:clamp(15px,1.6vw,19px);color:rgba(255,255,255,0.5);margin-bottom:32px;max-width:520px}
@@ -717,8 +719,16 @@ section{padding:60px 20px}
 
 <!-- HERO -->
 <section class="hero" id="hero" aria-label="Hero">
-  <video id="hero-video-desktop" class="hero-video" autoplay muted loop playsinline preload="none" style="display:none"><source src="hero-video/AV-video.mp4" type="video/mp4"></video>
-  <video id="hero-video-mobile" class="hero-video" autoplay muted loop playsinline preload="none" style="display:none"><source src="hero-video/Mobile-hero.mp4" type="video/mp4"></video>
+  <video id="hero-video-desktop" class="hero-video" autoplay muted loop playsinline preload="auto"><source src="hero-video/AV-video.mp4" type="video/mp4"></video>
+  <video id="hero-video-mobile" class="hero-video" autoplay muted loop playsinline preload="auto"><source src="hero-video/Mobile-hero.mp4" type="video/mp4"></video>
+  <script>
+  (function(){var m=window.innerWidth<=768;
+    document.getElementById('hero-video-desktop').style.display=m?'none':'block';
+    document.getElementById('hero-video-mobile').style.display=m?'block':'none';
+    var v=document.getElementById(m?'hero-video-mobile':'hero-video-desktop');
+    if(v){v.muted=true;v.load();v.play().catch(function(){});}
+  })();
+  </script>
   <div class="hero-content">
     <h1 class="hero-tag">Digital Web Agency</h1>
     <p class="hero-sub">Premium websites built for ambitious brands</p>
@@ -776,7 +786,7 @@ section{padding:60px 20px}
 <!-- CODE STRIP -->
 <div class="code-strip">
   <video autoplay muted loop playsinline preload="none">
-    <source src="videos/hello-world.mp4" type="video/mp4">
+    <source src="videos/v2-hello-world.mp4" type="video/mp4">
   </video>
 </div>
 
@@ -1279,8 +1289,9 @@ section{padding:60px 20px}
       heroVid.loop = true;
       heroVid.muted = true;
       heroVid.playsInline = true;
-      var hp = heroVid.play();
-      if (hp && hp.catch) hp.catch(function(){});
+      heroVid.preload = 'auto';
+      heroVid.load();
+      heroVid.play().catch(function(){});
       var targetOpacity = isMob ? 0.6 : 0.5;
       gsap.fromTo(heroVid, {opacity:0}, {opacity:targetOpacity, duration:isMob?1.2:2.5, ease:'power2.inOut', delay:0.1});
     }
