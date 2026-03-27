@@ -1254,6 +1254,7 @@ section{padding:60px 20px}
     ScrollTrigger.normalizeScroll(false);
     ScrollTrigger.config({
       ignoreMobileResize:true,
+      limitCallbacks:true,
       autoRefreshEvents:'visibilitychange,DOMContentLoaded,load'
     });
     if(isMob && window.forceScroll) window.forceScroll();
