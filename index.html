@@ -148,7 +148,7 @@ html,body{overflow-y:auto!important;touch-action:pan-y!important}
 .presence-bg{position:absolute;inset:0;z-index:0;overflow:hidden;transform:scale(1.15);opacity:0;transition:transform 2s cubic-bezier(0.16,1,0.3,1),opacity 1.5s ease}
 .presence-bg.revealed{transform:scale(1);opacity:1}
 .presence-bg svg{width:100%;height:100%;display:block}
-.presence-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.35}
+.presence-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.35;pointer-events:none;touch-action:none}
 .presence-overlay{position:absolute;inset:0;z-index:1;background:rgba(0,0,0,0.55)}
 .presence-line{position:absolute;top:50%;left:0;right:0;height:1px;z-index:2;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform 1.8s cubic-bezier(0.16,1,0.3,1) 0.3s;opacity:0.15}
 .presence-line.revealed{transform:scaleX(1)}
@@ -164,7 +164,7 @@ html,body{overflow-y:auto!important;touch-action:pan-y!important}
 .presence-sub.visible{opacity:1;transform:translateY(0)}
 
 /* CODE STRIP — cropped hello-world video */
-.code-strip{position:relative;width:100%;height:clamp(80px,10vw,140px);overflow:hidden;background:#0a0a0a}
+.code-strip{position:relative;width:100%;height:clamp(80px,10vw,140px);overflow:hidden;background:#0a0a0a;touch-action:pan-y}
 .code-strip video{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100%;height:500%;object-fit:cover;object-position:center 42%;pointer-events:none}
 @media(max-width:768px){
 .code-strip{height:clamp(60px,14vw,100px)}
@@ -380,7 +380,7 @@ section{padding:60px 20px}
 .ig-link:hover svg{opacity:1}
 /* Mobile touch + video optimization */
 @media(max-width:768px){
-  video{-webkit-transform:translateZ(0);transform:translateZ(0);will-change:transform}
+  video{-webkit-transform:translateZ(0);transform:translateZ(0);will-change:auto}
   .case-study-video{border-radius:12px}
   .about-video-wrap{border-radius:12px}
   .hero-video{object-position:center center}
@@ -699,8 +699,8 @@ section{padding:60px 20px}
 
 <!-- HERO -->
 <section class="hero" id="hero" aria-label="Hero">
-  <video id="hero-video-desktop" class="hero-video" autoplay muted loop playsinline preload="auto" style="display:none"><source src="hero-video/AV-video.mp4" type="video/mp4"></video>
-  <video id="hero-video-mobile" class="hero-video" autoplay muted loop playsinline preload="auto" style="display:none"><source src="hero-video/Mobile-hero.mp4" type="video/mp4"></video>
+  <video id="hero-video-desktop" class="hero-video" autoplay muted loop playsinline preload="none" style="display:none"><source src="hero-video/AV-video.mp4" type="video/mp4"></video>
+  <video id="hero-video-mobile" class="hero-video" autoplay muted loop playsinline preload="none" style="display:none"><source src="hero-video/Mobile-hero.mp4" type="video/mp4"></video>
   <div class="hero-content">
     <img class="hero-logo" src="logos/No%20Background%20Logos/Aryaventure.svg" alt="Arya Venture">
     <h1 class="hero-tag">Digital Web Agency</h1>
