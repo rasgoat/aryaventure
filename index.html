@@ -2003,22 +2003,30 @@ if(window.innerWidth>768){
     if(navLinks.classList.contains('mobile-open') && !navLinks.contains(e.target) && !ham.contains(e.target)) closeMenu();
   });
 
-  // Every nav link closes menu when tapped
+  // Every nav link closes menu and scrolls to section
   navLinks.querySelectorAll('a[href^="#"]').forEach(function(link){
-    link.addEventListener('click', function(e){
-      e.preventDefault();
-      var target = document.querySelector(link.getAttribute('href'));
+    function navTo(e){
+      if(e){ e.preventDefault(); e.stopImmediatePropagation(); }
+      var href = link.getAttribute('href');
+      var target = document.querySelector(href);
       closeMenu();
-      window.forceScroll();
-      if(target){
-        setTimeout(function(){
-          window.forceScroll();
-          var top = target.getBoundingClientRect().top + window.pageYOffset - 70;
-          window.scrollTo({top:top, behavior:'smooth'});
-          setTimeout(window.forceScroll, 500);
-        }, 300);
-      }
-    });
+      if(!target) return;
+      // Wait for menu close transition (400ms CSS) to fully complete
+      setTimeout(function(){
+        window.forceScroll();
+        // Use scrollIntoView — more reliable than manual scrollTo
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+        // Safety: ensure scroll is free after navigation
+        setTimeout(window.forceScroll, 600);
+      }, 450);
+    }
+    link.addEventListener('click', navTo);
+    // Instant response on mobile — bypass 300ms click delay
+    link.addEventListener('touchend', function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      navTo();
+    }, {passive: false});
   });
 })();
 </script>
