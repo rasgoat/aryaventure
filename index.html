@@ -104,8 +104,8 @@ h1.hero-tag,.hero-tag{font-family:var(--font-title);font-weight:700;font-size:cl
 .hero-cta:hover .arrow{transform:translateY(4px)}
 .hero-demo-btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 28px;background:var(--accent);color:var(--black);border-radius:4px;font-family:var(--font-title);font-weight:600;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;transition:transform 0.4s var(--ease-out),box-shadow 0.4s ease;white-space:nowrap}
 .hero-demo-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(200,255,0,0.2)}
-.hero-scroll{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;pointer-events:none;opacity:0}
-.scroll-line{width:1px;height:22px;background:rgba(255,255,255,0.15);position:relative;overflow:hidden;border-radius:1px}
+.hero-scroll{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;pointer-events:none;opacity:0}
+.scroll-line{width:1px;height:20px;background:rgba(255,255,255,0.15);position:relative;overflow:hidden;border-radius:1px}
 .scroll-line::after{content:'';position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--accent);animation:scrollPulse 2s ease-in-out infinite}
 @keyframes scrollPulse{0%{top:-100%}50%{top:0}100%{top:100%}}
 
@@ -660,38 +660,91 @@ section{padding:60px 20px}
 <body>
 <script>
 (function(){
-  var f=function(){
-    document.body.style.overflow='';
-    document.body.style.overflowY='auto';
-    document.documentElement.style.overflow='';
-    document.documentElement.style.overflowY='auto';
-    document.body.style.touchAction='pan-y';
-    document.documentElement.style.touchAction='pan-y';
-    document.body.style.height='';
-    document.documentElement.style.height='';
-  };
-  f();
-  document.addEventListener('DOMContentLoaded',f);
-  window.addEventListener('load',f);
-  setTimeout(f,300);
-  setTimeout(f,1000);
-  setTimeout(f,2500);
-  window.forceScroll=f;
-  // Mobile: aggressive scroll recovery
-  if(window.innerWidth<=768){
-    // On every touch, ensure scroll is free (unless modal/menu open)
-    function isOverlayOpen(){
-      return document.querySelector('.modal-overlay.is-open')||
-             document.querySelector('.nav-links.mobile-open')||
-             document.querySelector('.confirm-overlay.is-open');
+  /* ═══ ULTIMATE UNLOCKER — centralized scroll control ═══ */
+  var revealed = sessionStorage.getItem('arya_hero_revealed') === 'true';
+
+  // Core unlock function — the ONLY way to free scroll
+  function unlockPage(){
+    document.body.style.overflow = '';
+    document.body.style.overflowY = 'auto';
+    document.documentElement.style.overflow = '';
+    document.documentElement.style.overflowY = 'auto';
+    document.body.style.touchAction = 'pan-y';
+    document.documentElement.style.touchAction = 'pan-y';
+    document.body.style.height = '';
+    document.documentElement.style.height = '';
+  }
+
+  // Check if any overlay is legitimately locking scroll
+  function isOverlayOpen(){
+    return document.querySelector('.modal-overlay.is-open') ||
+           document.querySelector('.nav-links.mobile-open') ||
+           document.querySelector('.confirm-overlay.is-open');
+  }
+
+  // Safe unlock — respects open overlays
+  function safeUnlock(){
+    if(!isOverlayOpen()) unlockPage();
+  }
+
+  // Mark hero as revealed (skip intro on refresh/return)
+  function markRevealed(){
+    if(revealed) return;
+    revealed = true;
+    sessionStorage.setItem('arya_hero_revealed', 'true');
+    unlockPage();
+    // Force preloader away
+    var p = document.getElementById('preloader');
+    if(p && p.style.display !== 'none'){
+      p.style.transition = 'opacity 0.3s ease';
+      p.style.opacity = '0';
+      p.style.pointerEvents = 'none';
+      setTimeout(function(){ p.style.display = 'none'; }, 300);
     }
-    document.addEventListener('touchstart',function(){
-      if(!isOverlayOpen()) f();
-    },{passive:true});
-    // Periodic check every 2s
-    setInterval(function(){
-      if(!isOverlayOpen()) f();
-    },2000);
+  }
+
+  // Expose globally
+  window.forceScroll = safeUnlock;
+  window.unlockPage = unlockPage;
+  window.markRevealed = markRevealed;
+
+  // If already revealed (session), skip everything immediately
+  if(revealed){
+    unlockPage();
+  } else {
+    // First visit: unlock on any user scroll intent within first 5s
+    var intentEvents = ['wheel','touchmove','keydown'];
+    function onUserIntent(){
+      markRevealed();
+      intentEvents.forEach(function(evt){
+        window.removeEventListener(evt, onUserIntent);
+      });
+    }
+    intentEvents.forEach(function(evt){
+      window.addEventListener(evt, onUserIntent, {passive:true, once:false});
+    });
+    // Safety: always mark revealed after 5s
+    setTimeout(markRevealed, 5000);
+  }
+
+  // Nav link clicks always unlock
+  document.addEventListener('DOMContentLoaded', function(){
+    document.querySelectorAll('.nav-links a, .nav-cta-btn').forEach(function(a){
+      a.addEventListener('click', markRevealed);
+    });
+  });
+
+  // Scheduled unlocks (belt + suspenders)
+  unlockPage();
+  document.addEventListener('DOMContentLoaded', safeUnlock);
+  window.addEventListener('load', safeUnlock);
+  setTimeout(safeUnlock, 300);
+  setTimeout(safeUnlock, 1000);
+
+  // Mobile: touchstart recovery + periodic check
+  if(window.innerWidth <= 768){
+    document.addEventListener('touchstart', safeUnlock, {passive:true});
+    setInterval(safeUnlock, 2000);
   }
 })();
 </script>
@@ -1147,6 +1200,15 @@ section{padding:60px 20px}
 (function(){
   var bar = document.getElementById('preloader-bar');
   var preloader = document.getElementById('preloader');
+  var alreadyRevealed = sessionStorage.getItem('arya_hero_revealed') === 'true';
+
+  // If already revealed, kill preloader instantly
+  if(alreadyRevealed && preloader){
+    preloader.style.display = 'none';
+    if(window.markRevealed) window.markRevealed();
+    return;
+  }
+
   if(bar) bar.style.width='100%';
 
   var hideLoader = function(){
@@ -1155,8 +1217,9 @@ section{padding:60px 20px}
     preloader.style.opacity = '0';
     preloader.style.pointerEvents = 'none';
     setTimeout(function(){
-      preloader.style.display='none';
-      if(window.forceScroll) window.forceScroll();
+      preloader.style.display = 'none';
+      if(window.markRevealed) window.markRevealed();
+      else if(window.forceScroll) window.forceScroll();
     }, 600);
   };
 
@@ -1720,6 +1783,8 @@ if(window.innerWidth>768){
   function closeModal() {
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
     if(window.forceScroll) window.forceScroll();
   }
 
@@ -1790,6 +1855,8 @@ if(window.innerWidth>768){
   function hideConfirmation() {
     confirmPopup.classList.remove('is-open');
     confirmPopup.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
     if(window.forceScroll) window.forceScroll();
   }
 
