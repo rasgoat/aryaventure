@@ -3,8 +3,8 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 Disallow: /staging/
-Disallow: /privacy-policy.html
-Disallow: /cookie-policy.html
+Allow: /privacy-policy.html
+Allow: /cookie-policy.html
 
 Sitemap: https://aryaventure.com/sitemap.xml
 
