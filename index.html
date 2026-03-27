@@ -75,7 +75,8 @@ button{font:inherit;border:none;background:none;cursor:pointer;color:inherit}
 .preloader-bar{height:100%;width:0%;background:var(--accent);transition:width 0.2s ease}
 
 /* NAVBAR */
-.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;padding:0 var(--px);display:flex;align-items:center;justify-content:space-between;background:var(--glass-bg);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border-bottom:1px solid var(--glass-border);transform:translateY(-100%);will-change:transform}
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;padding:0 var(--px);display:flex;align-items:center;justify-content:space-between;background:var(--glass-bg);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border-bottom:1px solid var(--glass-border);transform:translateY(-100%);will-change:transform;-webkit-transform:translateZ(0)}
+section[id],div[id]{scroll-margin-top:80px}
 .nav-logo{display:flex;align-items:center;gap:10px}
 .nav-logo .av-mark{height:28px;width:28px}
 .nav-logo .arya-text{font-family:var(--font-title);font-weight:700;font-size:18px;letter-spacing:0.18em;color:var(--white);text-transform:uppercase;line-height:1}
@@ -91,8 +92,10 @@ button{font:inherit;border:none;background:none;cursor:pointer;color:inherit}
 /* HERO */
 .hero{position:relative;width:100%;height:100vh;height:100dvh;overflow:visible;background:var(--black);padding:0}
 .hero-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;will-change:opacity;-webkit-transform:translateZ(0);transform:translateZ(0)}
-#logo-3d{position:absolute;inset:0;z-index:1}
-#logo-3d canvas{display:block;width:100%!important;height:100%!important}
+/* HERO WORDMARK */
+.hero-wordmark{position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);z-index:2;text-align:center;pointer-events:none;opacity:0;display:flex;flex-direction:column;align-items:center;gap:8px}
+.hero-av{font-family:'Clash Display',sans-serif;font-weight:700;font-size:clamp(48px,8vw,120px);color:#ffffff;letter-spacing:0.12em;line-height:1;display:block}
+.hero-brand{font-family:'Clash Display',sans-serif;font-weight:500;font-size:clamp(12px,1.4vw,20px);color:rgba(255,255,255,0.5);letter-spacing:0.35em;text-transform:uppercase;display:block}
 .hero-content{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:0 var(--px) 10vh;pointer-events:none}
 h1.hero-tag,.hero-tag{font-family:var(--font-title);font-weight:700;font-size:clamp(19px,2.4vw,28px);letter-spacing:0.08em;text-transform:uppercase;color:#ffffff;margin-bottom:14px;margin-top:0}
 .hero-sub{font-family:var(--font-title);font-weight:500;font-size:clamp(15px,1.6vw,19px);color:rgba(255,255,255,0.5);margin-bottom:32px;max-width:520px}
@@ -116,8 +119,6 @@ html,body{overflow-y:auto!important;touch-action:pan-y!important}
 
 /* Hero: scroll passes through, children are ghosts */
 .hero{touch-action:pan-y!important;overflow:visible!important;pointer-events:auto!important}
-#logo-3d,
-#logo-3d canvas,
 #hero-video-desktop,
 #hero-video-mobile,
 .hero-video,
@@ -147,8 +148,6 @@ html,body{overflow-y:auto!important;touch-action:pan-y!important}
 
 /* PRESENCE */
 #presence{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:120px var(--px)}
-#presence-3d{position:absolute;inset:0;z-index:0}
-#presence-3d canvas{width:100%!important;height:100%!important;display:block}
 .presence-bg{position:absolute;inset:0;z-index:0;overflow:hidden;transform:scale(1.15);opacity:0;transition:transform 2s cubic-bezier(0.16,1,0.3,1),opacity 1.5s ease}
 .presence-bg.revealed{transform:scale(1);opacity:1}
 .presence-bg svg{width:100%;height:100%;display:block}
@@ -313,11 +312,13 @@ img.logo:hover{opacity:0.7}
 .case-study-meta{grid-template-columns:1fr;gap:32px}
 }
 @media(min-width:769px){
-#hero-video-desktop{opacity:0.35}
+#hero-video-desktop{opacity:0.5}
 }
 @media(max-width:768px){
-#logo-3d{display:none!important}
-#hero-video-mobile{opacity:0.65}
+#hero-video-mobile{opacity:0.6}
+.hero-wordmark{transform:translate(-50%,-60%)}
+.hero-av{font-size:clamp(64px,18vw,96px)}
+.hero-brand{font-size:clamp(10px,3vw,14px);letter-spacing:0.3em}
 .hero{height:100dvh}
 .hero-video{object-fit:cover;object-position:center center}
 .hero-tag{font-size:15px;letter-spacing:0.06em}
@@ -456,7 +457,7 @@ section{padding:60px 20px}
     overflow: visible !important;
     touch-action: pan-y !important;
   }
-  video, canvas, #logo-3d {
+  video, canvas {
     pointer-events: none !important;
   }
   * {
@@ -660,9 +661,10 @@ section{padding:60px 20px}
   };
   f();
   document.addEventListener('DOMContentLoaded',f);
-  setTimeout(f,500);
-  setTimeout(f,1500);
-  setTimeout(f,3000);
+  window.addEventListener('load',f);
+  setTimeout(f,300);
+  setTimeout(f,1000);
+  setTimeout(f,2500);
   window.forceScroll=f;
 })();
 </script>
@@ -696,7 +698,10 @@ section{padding:60px 20px}
 <section class="hero" id="hero" aria-label="Hero">
   <video id="hero-video-desktop" class="hero-video" autoplay muted loop playsinline preload="auto" style="display:none"><source src="hero-video/No-logo-hero.mp4" type="video/mp4"></video>
   <video id="hero-video-mobile" class="hero-video" autoplay muted loop playsinline preload="auto" style="display:none"><source src="hero-video/Mobile-hero.mp4" type="video/mp4"></video>
-  <div id="logo-3d"></div>
+  <div class="hero-wordmark">
+    <span class="hero-av">AV</span>
+    <span class="hero-brand">ARYAVENTURE</span>
+  </div>
   <div class="hero-content">
     <h1 class="hero-tag">Digital Web Agency</h1>
     <p class="hero-sub">Premium websites built for ambitious brands</p>
@@ -712,7 +717,6 @@ section{padding:60px 20px}
 
 <!-- PRESENCE SECTION -->
 <section id="presence">
-  <div id="presence-3d"></div>
   <div class="presence-content">
     <span class="presence-label">WHAT WE DO</span>
     <h2 class="presence-headline">
@@ -1090,24 +1094,10 @@ section{padding:60px 20px}
 
 
 <!-- SCRIPTS -->
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"}}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Observer.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-
-<!-- HERO VIDEO SWITCH: show correct video for device -->
-<script>
-(function(){
-  var isMobile = window.innerWidth <= 768;
-  if(isMobile) {
-    document.getElementById('hero-video-mobile').style.display = 'block';
-    document.getElementById('logo-3d').style.display = 'none';
-  } else {
-    document.getElementById('hero-video-desktop').style.display = 'block';
-  }
-})();
-</script>
 
 <!-- PRELOADER -->
 <script>
@@ -1118,230 +1108,70 @@ section{padding:60px 20px}
 
   var hideLoader = function(){
     if(!preloader) return;
+    preloader.style.transition = 'opacity 0.6s ease';
     preloader.style.opacity = '0';
     preloader.style.pointerEvents = 'none';
-    preloader.style.transition = 'opacity 0.6s ease';
-    setTimeout(function(){ preloader.style.display='none'; }, 600);
-    if(window.forceScroll) window.forceScroll();
+    setTimeout(function(){
+      preloader.style.display='none';
+      if(window.forceScroll) window.forceScroll();
+    }, 600);
   };
 
-  // On mobile, fire immediately. On desktop, wait for GLB or timeout.
-  if(window.innerWidth <= 768){
-    setTimeout(function(){
-      hideLoader();
-      window.dispatchEvent(new Event('arya-ready'));
-    },300);
-  }
-
-  // Safety: always hide after 2s
   window.addEventListener('load', hideLoader);
   setTimeout(hideLoader, 2000);
 })();
 </script>
 
-<!-- THREE.JS — 3D logo (desktop only) + CTA particles (all devices) -->
-<script type="module">
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-
-/* ── HERO 3D — desktop only ── */
-if (window.innerWidth > 768) {
+<!-- CTA PARTICLE SPHERE (Canvas2D — no Three.js) -->
+<script>
 (function(){
-  const container = document.getElementById('logo-3d');
+  var container = document.getElementById('cta-particles');
   if(!container) return;
-  const cw = container.clientWidth || window.innerWidth;
-  const ch = container.clientHeight || window.innerHeight;
-  const renderer = new THREE.WebGLRenderer({antialias:true,alpha:true});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  renderer.setSize(cw,ch);
-  renderer.setClearColor(0x000000,0);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.0;
-  container.appendChild(renderer.domElement);
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(40,cw/ch,0.1,2000);
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  const roomEnv = new RoomEnvironment(renderer);
-  scene.environment = pmrem.fromScene(roomEnv).texture;
-  pmrem.dispose(); roomEnv.dispose();
-
-  scene.add(new THREE.AmbientLight(0xffffff,0.4));
-  const keyL = new THREE.DirectionalLight(0xffffff,1.6); keyL.position.set(-120,140,80); scene.add(keyL);
-  const fillL = new THREE.DirectionalLight(0xffffff,0.25); fillL.position.set(80,-60,40); scene.add(fillL);
-  const pt1 = new THREE.PointLight(0xffffff,2.0,300); pt1.position.set(5,5,5); scene.add(pt1);
-  const pt2 = new THREE.PointLight(0xc8ff00,0.4,300); pt2.position.set(-5,3,-3); scene.add(pt2);
-  const pt3 = new THREE.PointLight(0x4488ff,0.3,300); pt3.position.set(0,-5,5); scene.add(pt3);
-
-  const masterGroup = new THREE.Group();
-  scene.add(masterGroup);
-
-  new GLTFLoader().load('3d-glb-logo/3D-logo.glb',
-    function(gltf){
-      const model = gltf.scene;
-      model.traverse(c => {
-        if(c.isMesh && c.material){
-          c.material.envMap = scene.environment;
-          c.material.envMapIntensity = 3.5;
-          if(c.material.roughness !== undefined) c.material.roughness = Math.max(c.material.roughness, 0.02);
-          if(c.material.metalness !== undefined) c.material.metalness = 1.0;
-          if(c.material.emissive) c.material.emissive.set(0x111111);
-          if(c.material.emissiveIntensity !== undefined) c.material.emissiveIntensity = 0.1;
-          c.material.needsUpdate = true;
-        }
-      });
-      const box = new THREE.Box3().setFromObject(model);
-      const center = box.getCenter(new THREE.Vector3());
-      const size = box.getSize(new THREE.Vector3());
-      model.position.sub(center);
-      const maxDim = Math.max(size.x,size.y,size.z);
-      model.scale.setScalar(80/maxDim);
-      masterGroup.add(model);
-      camera.position.z = 80*2.8;
-
-      // Dismiss preloader + fire ready
-      var bar=document.getElementById('preloader-bar');
-      var preloader=document.getElementById('preloader');
-      if(bar)bar.style.width='100%';
-      setTimeout(function(){
-        if(preloader)preloader.classList.add('done');
-        setTimeout(function(){if(preloader)preloader.style.display='none'},500);
-        window.dispatchEvent(new Event('arya-ready'));
-      },200);
-
-      masterGroup.rotation.y = -Math.PI*0.4;
-      masterGroup.scale.set(0.001,0.001,0.001);
-      const tl = gsap.timeline({delay:0.5,defaults:{ease:'power4.out'}});
-      tl.to(masterGroup.scale,{x:1,y:1,z:1,duration:1.8,ease:'elastic.out(1,0.55)'});
-      tl.to(masterGroup.rotation,{y:0,duration:2.4},0);
-      tl.call(()=>{gsap.to(masterGroup.position,{y:2,duration:3.5,repeat:-1,yoyo:true,ease:'sine.inOut'})});
-    },
-    undefined,
-    function(){
-      // GLB failed — dismiss preloader anyway
-      var bar=document.getElementById('preloader-bar');
-      var preloader=document.getElementById('preloader');
-      if(bar)bar.style.width='100%';
-      if(preloader){preloader.classList.add('done');setTimeout(function(){preloader.style.display='none'},800)}
-      window.dispatchEvent(new Event('arya-ready'));
-    }
-  );
-
-  const mouse = {x:0, y:0};
-  const pos = {x:0, y:0};
-  const rot = {x:0, y:0};
-  const vel = {x:0, y:0};
-  let mouseInHero = false;
-  let idleTime = 0;
-  const heroEl = document.querySelector('.hero');
-
-  heroEl.addEventListener('mouseenter', () => { mouseInHero = true; idleTime = 0; });
-  heroEl.addEventListener('mouseleave', () => { mouseInHero = false; });
-  window.addEventListener('mousemove', e => {
-    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
-    idleTime = 0;
-  });
-
-  container.style.pointerEvents = 'auto';
-  let rendering = true;
-  const heroObs = new IntersectionObserver(entries => { rendering = entries[0].isIntersecting; }, {threshold:0});
-  heroObs.observe(heroEl);
-
-  gsap.registerPlugin(ScrollTrigger);
-  const recedeProxy = {s:1, o:1};
-  gsap.to(recedeProxy, {
-    s:0.75, o:0, ease:'none',
-    scrollTrigger: {trigger:'.hero', start:'top top', end:'bottom top', scrub:true,
-      onUpdate: () => { masterGroup.scale.setScalar(recedeProxy.s); container.style.opacity = recedeProxy.o; }
-    }
-  });
-
-  let prevAngle = null, spinY = 0, spinMomentum = 0;
-  window.addEventListener('mousemove', e => {
-    if (!mouseInHero) { prevAngle = null; return; }
-    const cx = window.innerWidth/2, cy = window.innerHeight/2;
-    const dx = e.clientX - cx, dy = e.clientY - cy;
-    if (Math.sqrt(dx*dx+dy*dy) < 60) { prevAngle = null; return; }
-    const angle = Math.atan2(dy, dx);
-    if (prevAngle !== null) {
-      let delta = angle - prevAngle;
-      if (delta > Math.PI) delta -= Math.PI*2;
-      if (delta < -Math.PI) delta += Math.PI*2;
-      spinMomentum += delta * 0.15;
-    }
-    prevAngle = angle;
-  });
-
-  let frame = 0;
-  function animate() {
-    requestAnimationFrame(animate);
-    if (!rendering) return;
-    frame++;
-    idleTime += 0.016;
-    spinMomentum *= 0.92;
-    spinY += spinMomentum;
-
-    if (mouseInHero) {
-      const prevX = pos.x, prevY = pos.y;
-      pos.x += (mouse.x*40 - pos.x) * 0.06;
-      pos.y += (-mouse.y*25 - pos.y) * 0.06;
-      vel.x = pos.x - prevX; vel.y = pos.y - prevY;
-      rot.x += (-mouse.y*0.35 - rot.x) * 0.04;
-      rot.y += (mouse.x*0.45 - rot.y) * 0.04;
-      masterGroup.position.x = pos.x;
-      masterGroup.position.y = pos.y + Math.sin(frame*0.015)*1.5;
-      masterGroup.rotation.x = rot.x + vel.y*0.15;
-      masterGroup.rotation.y = rot.y + vel.x*0.08 + spinY;
-    } else {
-      pos.x *= 0.97; pos.y *= 0.97;
-      vel.x *= 0.95; vel.y *= 0.95;
-      masterGroup.position.x = pos.x;
-      prevAngle = null;
-      masterGroup.position.y = pos.y + Math.sin(frame*0.012)*2.5;
-      masterGroup.rotation.y = spinY + frame*0.003;
-      masterGroup.rotation.x += 0.0008;
-      rot.x *= 0.98; rot.y *= 0.98;
-      masterGroup.rotation.x += rot.x*0.1;
-    }
-    renderer.render(scene, camera);
+  var canvas = document.createElement('canvas');
+  canvas.style.cssText = 'width:100%;height:100%;pointer-events:none;position:absolute;inset:0';
+  container.appendChild(canvas);
+  var ctx = canvas.getContext('2d');
+  var count = window.innerWidth <= 768 ? 300 : 600;
+  var points = [];
+  for(var i=0;i<count;i++){
+    var phi = Math.acos(2*Math.random()-1);
+    var theta = 2*Math.PI*Math.random();
+    points.push({phi:phi, theta:theta, r:0.35});
   }
-  animate();
-
-  window.addEventListener('resize', () => {
-    const w = container.clientWidth || window.innerWidth;
-    const h = container.clientHeight || window.innerHeight;
-    camera.aspect = w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h);
-  });
-})();
-}
-
-/* ── CTA PARTICLE SPHERE ── */
-(function(){
-  const container=document.getElementById('cta-particles');
-  if(!container)return;
-  const isMob=window.innerWidth<=768;
-  const renderer=new THREE.WebGLRenderer({antialias:!isMob,alpha:true});
-  renderer.setPixelRatio(isMob?1:Math.min(window.devicePixelRatio,2));
-  renderer.setSize(container.clientWidth,container.clientHeight);
-  renderer.setClearColor(0x000000,0);
-  renderer.domElement.style.pointerEvents='none';
-  container.appendChild(renderer.domElement);
-  const scene=new THREE.Scene();
-  const camera=new THREE.PerspectiveCamera(50,container.clientWidth/container.clientHeight,0.1,1000);
-  camera.position.z=200;
-  const count=isMob?400:800;const positions=new Float32Array(count*3);
-  for(let i=0;i<count;i++){const phi=Math.acos(2*Math.random()-1);const theta=2*Math.PI*Math.random();const r=80;positions[i*3]=r*Math.sin(phi)*Math.cos(theta);positions[i*3+1]=r*Math.sin(phi)*Math.sin(theta);positions[i*3+2]=r*Math.cos(phi)}
-  const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(positions,3));
-  const mat=new THREE.PointsMaterial({color:0xffffff,size:isMob?1.5:1.2,transparent:true,opacity:isMob?0.35:0.25});
-  const sphere=new THREE.Points(geo,mat);scene.add(sphere);
-  let active=false;
-  const obs=new IntersectionObserver(entries=>{active=entries[0].isIntersecting},{threshold:0});
+  var rotY=0, rotX=0, active=false;
+  function resize(){
+    var r = container.getBoundingClientRect();
+    canvas.width = r.width * Math.min(window.devicePixelRatio,2);
+    canvas.height = r.height * Math.min(window.devicePixelRatio,2);
+    canvas.style.width = r.width+'px';
+    canvas.style.height = r.height+'px';
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  var obs = new IntersectionObserver(function(e){active=e[0].isIntersecting},{threshold:0});
   obs.observe(container.closest('section')||container);
-  function animate(){requestAnimationFrame(animate);if(!active)return;sphere.rotation.y+=0.0008;sphere.rotation.x+=0.0003;renderer.render(scene,camera)}
-  animate();
-  window.addEventListener('resize',()=>{const w=container.clientWidth||window.innerWidth;const h=container.clientHeight||window.innerHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h)});
+  function draw(){
+    requestAnimationFrame(draw);
+    if(!active) return;
+    rotY += 0.0008; rotX += 0.0003;
+    var w=canvas.width, h=canvas.height;
+    ctx.clearRect(0,0,w,h);
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    var cx=w/2, cy=h/2, scale=Math.min(w,h)*0.38;
+    for(var i=0;i<count;i++){
+      var p=points[i];
+      var x1=p.r*Math.sin(p.phi)*Math.cos(p.theta+rotY);
+      var y1=p.r*Math.sin(p.phi)*Math.sin(p.theta+rotY);
+      var z1=p.r*Math.cos(p.phi);
+      var y2=y1*Math.cos(rotX)-z1*Math.sin(rotX);
+      var z2=y1*Math.sin(rotX)+z1*Math.cos(rotX);
+      var sz=1/(1-z2*0.5);
+      ctx.beginPath();
+      ctx.arc(cx+x1*scale*sz, cy+y2*scale*sz, sz*1.2, 0, 6.28);
+      ctx.fill();
+    }
+  }
+  draw();
 })();
 </script>
 
@@ -1422,9 +1252,15 @@ if (window.innerWidth > 768) {
       heroVid.playsInline = true;
       var hp = heroVid.play();
       if (hp && hp.catch) hp.catch(function(){});
-      var targetOpacity = isMob ? 0.65 : 0.35;
+      var targetOpacity = isMob ? 0.6 : 0.5;
       gsap.fromTo(heroVid, {opacity:0}, {opacity:targetOpacity, duration:isMob?1.2:2.5, ease:'power2.inOut', delay:0.1});
     }
+
+    // Hero wordmark entrance
+    gsap.to('.hero-wordmark', {opacity:1, y:0, duration:1.4, ease:'power3.out', delay:0.8});
+    gsap.from('.hero-av', {opacity:0, y:20, duration:1.2, ease:'power3.out', delay:0.8});
+    gsap.from('.hero-brand', {opacity:0, y:10, duration:1.0, ease:'power3.out', delay:1.2});
+
     // Scroll indicator fades in after delay
     gsap.fromTo('.hero-scroll', {opacity:0, y:10}, {opacity:1, y:0, duration:1.2, ease:'power3.out', delay:2.2});
 
@@ -1561,16 +1397,9 @@ if (window.innerWidth > 768) {
   }
 
   var inited=false;
-  window.addEventListener('arya-ready',function(){if(!inited){inited=true;init()}});
-  // Fast fallback — never wait more than 1.5s for GLB
-  setTimeout(()=>{
-    if(!inited){
-      inited=true;
-      document.getElementById('preloader')?.classList.add('done');
-      setTimeout(()=>{const p=document.getElementById('preloader');if(p)p.style.display='none'},600);
-      init();
-    }
-  },1500);
+  function tryInit(){if(!inited){inited=true;init()}}
+  if(document.readyState==='complete'||document.readyState==='interactive') tryInit();
+  else document.addEventListener('DOMContentLoaded',tryInit);
 })();
 </script>
 <script>
@@ -1658,52 +1487,6 @@ if (window.innerWidth > 768) {
     }
   }
 })();
-</script>
-<!-- PRESENCE 3D BACKGROUND (isolated, loads last) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-<script>
-if(window.innerWidth>768){
-(function(){
-  var T=window.THREE;if(!T)return;
-  var c=document.getElementById('presence-3d'),s=document.getElementById('presence');
-  if(!c||!s)return;
-  // Simplex noise
-  function SN(){this.g=[[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],[1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],[0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]];this.p=[];for(var i=0;i<256;i++)this.p[i]=Math.floor(Math.random()*256);this.pm=[];for(var i=0;i<512;i++)this.pm[i]=this.p[i&255]}
-  SN.prototype.d=function(g,x,y){return g[0]*x+g[1]*y};
-  SN.prototype.n=function(xi,yi){var F=.5*(Math.sqrt(3)-1),G=(3-Math.sqrt(3))/6,u=(xi+yi)*F,i=Math.floor(xi+u),j=Math.floor(yi+u),t=(i+j)*G,x0=xi-(i-t),y0=yi-(j-t),i1=x0>y0?1:0,j1=x0>y0?0:1,x1=x0-i1+G,y1=y0-j1+G,x2=x0-1+2*G,y2=y0-1+2*G,ii=i&255,jj=j&255,g0=this.pm[ii+this.pm[jj]]%12,g1=this.pm[ii+i1+this.pm[jj+j1]]%12,g2=this.pm[ii+1+this.pm[jj+1]]%12,n0=0,n1=0,n2=0,t0=.5-x0*x0-y0*y0;if(t0>=0){t0*=t0;n0=t0*t0*this.d(this.g[g0],x0,y0)}var t1=.5-x1*x1-y1*y1;if(t1>=0){t1*=t1;n1=t1*t1*this.d(this.g[g1],x1,y1)}var t2=.5-x2*x2-y2*y2;if(t2>=0){t2*=t2;n2=t2*t2*this.d(this.g[g2],x2,y2)}return 70*(n0+n1+n2)};
-  var w=c.clientWidth||innerWidth,h=c.clientHeight||innerHeight;
-  var r=new T.WebGLRenderer({antialias:true});r.setPixelRatio(Math.min(devicePixelRatio,2));r.setSize(w,h);r.setClearColor(0x000000);c.appendChild(r.domElement);
-  var sc=new T.Scene();sc.fog=new T.FogExp2(0x000000,0.0025);
-  var cam=new T.PerspectiveCamera(60,w/h,1,1000);cam.position.set(0,0,180);
-  var geo=new T.PlaneGeometry(500,500,50,50);
-  var mat=new T.MeshPhongMaterial({color:0x0a0a0a,specular:0x555555,shininess:50,flatShading:true,side:T.DoubleSide});
-  var msh=new T.Mesh(geo,mat);msh.rotation.x=-0.6;msh.position.y=-60;msh.position.z=-40;sc.add(msh);
-  var pa=geo.getAttribute('position'),oz=new Float32Array(pa.count);
-  for(var i=0;i<pa.count;i++)oz[i]=pa.getZ(i);
-  sc.add(new T.AmbientLight(0x111118,0.8));
-  var l1=new T.PointLight(0xffffff,3,400);l1.position.set(0,60,120);sc.add(l1);
-  var l2=new T.PointLight(0xc8ff00,0.5,300);l2.position.set(-100,40,80);sc.add(l2);
-  var l3=new T.PointLight(0x2244aa,0.6,400);l3.position.set(50,-80,-60);sc.add(l3);
-  var mx={x:0,y:0},sm={x:0,y:0},mw=new T.Vector3(),rc=new T.Raycaster(),nd=new T.Vector2(),vt=new T.Vector3();
-  addEventListener('mousemove',function(e){mx.x=(e.clientX/innerWidth)*2-1;mx.y=-(e.clientY/innerHeight)*2+1});
-  var sn=new SN(),ck=new T.Clock(),act=false;
-  var ob=new IntersectionObserver(function(e){act=e[0].isIntersecting},{threshold:0});ob.observe(s);
-  function anim(){
-    requestAnimationFrame(anim);if(!act)return;
-    var t=ck.getElapsedTime();sm.x+=(mx.x-sm.x)*0.06;sm.y+=(mx.y-sm.y)*0.06;
-    l1.position.x=sm.x*200;l1.position.y=sm.y*100+60;l2.position.x=-sm.x*120;
-    nd.set(sm.x,sm.y);rc.setFromCamera(nd,cam);
-    var hi=rc.intersectObject(msh);if(hi.length>0)mw.copy(hi[0].point);
-    for(var i=0;i<pa.count;i++){var x=pa.getX(i),y=pa.getY(i),z=oz[i]+sn.n(x*0.012+t*0.15,y*0.012+t*0.1)*8;if(hi.length>0){vt.set(x,y,0);msh.localToWorld(vt);var d2=(vt.x-mw.x)*(vt.x-mw.x)+(vt.y-mw.y)*(vt.y-mw.y);if(d2<6400){var d=Math.sqrt(d2),inf=1-d/80;z+=inf*inf*(3-2*inf)*18}}pa.setZ(i,z)}
-    pa.needsUpdate=true;geo.computeVertexNormals();
-    cam.position.x+=(sm.x*15-cam.position.x)*0.02;cam.position.y+=(sm.y*8-cam.position.y)*0.02;cam.lookAt(0,-30,-40);
-    r.render(sc,cam);
-  }
-  anim();
-  addEventListener('resize',function(){var w2=c.clientWidth||innerWidth,h2=c.clientHeight||innerHeight;cam.aspect=w2/h2;cam.updateProjectionMatrix();r.setSize(w2,h2)});
-  delete window.THREE;
-})();
-}
 </script>
 <script>
 (function() {
@@ -2101,6 +1884,15 @@ window.addEventListener('load', function(){
   var heroDesktop = document.getElementById('hero-video-desktop');
   var heroMobile = document.getElementById('hero-video-mobile');
   var activeHero = isMobile ? heroMobile : heroDesktop;
+
+  // Show correct hero video
+  if(isMobile){
+    if(heroMobile) heroMobile.style.display = 'block';
+    if(heroDesktop) heroDesktop.style.display = 'none';
+  } else {
+    if(heroDesktop) heroDesktop.style.display = 'block';
+    if(heroMobile) heroMobile.style.display = 'none';
+  }
 
   // All non-hero videos
   var sectionVideos = Array.from(

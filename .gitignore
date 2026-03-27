@@ -23,3 +23,5 @@ arya-core/
 og-image.html
 generate-og.js
 *-original.mp4
+3d-glb-logo/
+*.glb
